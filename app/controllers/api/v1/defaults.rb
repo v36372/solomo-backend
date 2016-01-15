@@ -14,7 +14,7 @@ module API
 
         helpers do
           def authenticate_user!
-            unless params[:access_token] && @user = User.find_by_authentication_token(params[:access_token])
+            unless params[:user_token] && @user = User.find_by_authentication_token(params[:user_token])
               return error!("Access token is invalid!", 401)
             end
           end
@@ -35,6 +35,15 @@ module API
 
           def permitted_params
             @permitted_params ||= declared(params, include_missing: false)
+          end
+
+          def permit_params(*fields)
+            return params.to_h if fields.blank?
+            real_params = {}
+            fields.to_a.each do |field|
+              real_params[field] = params[field] if params[field].present?
+            end
+            return real_params
           end
 
           def address_last_updated_at
@@ -69,7 +78,7 @@ module API
         end
 
         rescue_from Grape::Exceptions::ValidationErrors do |e|
-          errors = { errors: e.to_json }
+          errors = { error: JSON.parse(e.to_json) }
           rack_response errors, 404
         end
 
@@ -78,7 +87,7 @@ module API
         end
 
         rescue_from ActiveRecord::RecordInvalid do |e|
-          errors = { errors: e.message }
+          errors = { error: e.message }
           error!(errors, 422)
         end
 

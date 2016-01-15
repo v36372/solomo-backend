@@ -11,7 +11,47 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160115002410) do
+ActiveRecord::Schema.define(version: 20160115013339) do
+
+  create_table "post_tags", force: :cascade do |t|
+    t.integer  "post_id",    limit: 4
+    t.integer  "tag_id",     limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "post_tags", ["post_id"], name: "index_post_tags_on_post_id", using: :btree
+  add_index "post_tags", ["tag_id"], name: "index_post_tags_on_tag_id", using: :btree
+
+  create_table "posts", force: :cascade do |t|
+    t.integer  "user_id",              limit: 4
+    t.text     "description",          limit: 65535
+    t.float    "lat",                  limit: 24
+    t.float    "long",                 limit: 24
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.string   "picture_file_name",    limit: 255
+    t.string   "picture_content_type", limit: 255
+    t.integer  "picture_file_size",    limit: 4
+    t.datetime "picture_updated_at"
+  end
+
+  add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
+
+  create_table "tags", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_followings", force: :cascade do |t|
+    t.integer  "user_id",      limit: 4
+    t.integer  "following_id", limit: 4
+    t.datetime "updated_at"
+    t.datetime "created_at"
+  end
+
+  add_index "user_followings", ["user_id"], name: "index_user_followings_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 191
@@ -43,4 +83,8 @@ ActiveRecord::Schema.define(version: 20160115002410) do
     t.string   "authentication_token",   limit: 191
   end
 
+  add_foreign_key "post_tags", "posts"
+  add_foreign_key "post_tags", "tags"
+  add_foreign_key "posts", "users"
+  add_foreign_key "user_followings", "users"
 end
