@@ -42,9 +42,10 @@ module API
           end
 
           if user.save
-            return { access_token: user.authentication_token }
+            return { user_token: user.authentication_token }
           else
-            error!(user.errors, 422)
+            errors = { errors: user.errors }
+            error!(errors, 422)
           end
         end
       end

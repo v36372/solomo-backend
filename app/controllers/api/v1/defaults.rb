@@ -69,7 +69,8 @@ module API
         end
 
         rescue_from Grape::Exceptions::ValidationErrors do |e|
-          rack_response e.to_json, 404
+          errors = { errors: e.to_json }
+          rack_response errors, 404
         end
 
         rescue_from ActiveRecord::RecordNotFound do |e|
@@ -77,7 +78,8 @@ module API
         end
 
         rescue_from ActiveRecord::RecordInvalid do |e|
-          error!(e.message, 422)
+          errors = { errors: e.message }
+          error!(errors, 422)
         end
 
         rescue_from FbGraph::InvalidToken do |e|
@@ -86,7 +88,8 @@ module API
 
         rescue_from :all do |e|
           if Rails.env.development? || Rails.env.test?
-            error!(e.message, 500)
+            errors = { errors: e.message }
+            error!(errors, 500)
           else
             error!("Internal server error", 500)
           end
