@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160115013339) do
+ActiveRecord::Schema.define(version: 20160115021810) do
+
+  create_table "post_likes", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.integer  "post_id",    limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "post_likes", ["post_id"], name: "index_post_likes_on_post_id", using: :btree
+  add_index "post_likes", ["user_id"], name: "index_post_likes_on_user_id", using: :btree
 
   create_table "post_tags", force: :cascade do |t|
     t.integer  "post_id",    limit: 4
@@ -83,6 +93,8 @@ ActiveRecord::Schema.define(version: 20160115013339) do
     t.string   "authentication_token",   limit: 191
   end
 
+  add_foreign_key "post_likes", "posts"
+  add_foreign_key "post_likes", "users"
   add_foreign_key "post_tags", "posts"
   add_foreign_key "post_tags", "tags"
   add_foreign_key "posts", "users"

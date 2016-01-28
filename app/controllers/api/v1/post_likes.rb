@@ -3,31 +3,66 @@ module API
     class PostLikes < Grape::API
       include API::V1::Defaults
 
-      resource :post_like, desc: "Post likes" do
+      resource :post_likes, desc: "Post likes" do
+        before do
+          authenticate_user!
+          @post = Post.find_by_id params[:post_id]
+        end
+
         desc "Get like list of a post"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
-          requires :post_id, type: Integer, desc: 'Id of the post want to get likes'
         end
         get do
+          return {
+            like_count: @post.liked_users.count,
+            likes: @post.liked_users.map do |user|
+              {
+                user_id: user.id,
+                name: user.name,
+                avatar_url: user.avatar.url(:thumb)
+              }
+            end
+          }
         end
 
         desc "Like a post"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
-          requires :post_id, type: Integer, desc: 'Id of the post want to get likes'
-          requires :user_id, type: Integer, desc: 'User id of user who likes the post'
         end
         post do
+          PostLike.find_or_create_by(user_id: @user.id, post_id: @post.id)
+          @post.reload
+          return {
+            like_count: @post.liked_users.count,
+            likes: @post.liked_users.map do |user|
+              {
+                user_id: user.id,
+                name: user.name,
+                avatar_url: user.avatar.url(:thumb)
+              }
+            end
+          }
         end
 
         desc "Unlike a post"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
-          requires :post_id, type: Integer, desc: 'Id of the post want to get likes'
-          requires :user_id, type: Integer, desc: 'User id of user who unlikes the post'
         end
         delete do
+          @like = PostLike.find_by(user_id: @user.id, post_id: @post.id)
+          @like.destroy if @like.present?
+          @post.reload
+          return {
+            like_count: @post.liked_users.count,
+            likes: @post.liked_users.map do |user|
+              {
+                user_id: user.id,
+                name: user.name,
+                avatar_url: user.avatar.url(:thumb)
+              }
+            end
+          }
         end
       end
     end

@@ -16,6 +16,9 @@ class User < ActiveRecord::Base
   has_many :user_followers, class_name: 'UserFollowing', foreign_key: 'following_id'
   has_many :followers, through: :user_followers, source: :following
 
+  has_many :post_likes
+  has_many :liked_posts, class_name: 'Post', through: :post_likes, source: :post
+
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\Z/
   validates :first_name, :last_name, presence: true, unless: :api?
 

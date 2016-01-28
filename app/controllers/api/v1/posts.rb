@@ -4,6 +4,10 @@ module API
       include API::V1::Defaults
 
       resource :post, desc: "Posts" do
+        before do
+          authenticate_user!
+        end
+
         desc "Create a new post"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
