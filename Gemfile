@@ -12,6 +12,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'paperclip'
 gem 'mysql2'
+gem 'pg'
 
 gem 'devise'
 gem 'devise-async'
@@ -37,6 +38,9 @@ gem 'grape-route-helpers', require: false
 
 gem 'haml-rails'
 gem 'kramdown'
+
+gem 'unicorn'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -54,7 +58,6 @@ group :development do
   gem 'quiet_assets'
   gem 'rails_layout'
   gem 'spring-commands-rspec'
-  gem 'puma'
   gem "letter_opener"
   gem "parallel_tests"
 end

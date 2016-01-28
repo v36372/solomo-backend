@@ -13,9 +13,12 @@
 
 ActiveRecord::Schema.define(version: 20160115021810) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "post_likes", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4
-    t.integer  "post_id",    limit: 4
+    t.integer  "user_id"
+    t.integer  "post_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -24,8 +27,8 @@ ActiveRecord::Schema.define(version: 20160115021810) do
   add_index "post_likes", ["user_id"], name: "index_post_likes_on_user_id", using: :btree
 
   create_table "post_tags", force: :cascade do |t|
-    t.integer  "post_id",    limit: 4
-    t.integer  "tag_id",     limit: 4
+    t.integer  "post_id"
+    t.integer  "tag_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -34,29 +37,29 @@ ActiveRecord::Schema.define(version: 20160115021810) do
   add_index "post_tags", ["tag_id"], name: "index_post_tags_on_tag_id", using: :btree
 
   create_table "posts", force: :cascade do |t|
-    t.integer  "user_id",              limit: 4
-    t.text     "description",          limit: 65535
-    t.float    "lat",                  limit: 24
-    t.float    "long",                 limit: 24
+    t.integer  "user_id"
+    t.text     "description"
+    t.float    "lat"
+    t.float    "long"
     t.datetime "start_date"
     t.datetime "end_date"
     t.string   "picture_file_name",    limit: 255
     t.string   "picture_content_type", limit: 255
-    t.integer  "picture_file_size",    limit: 4
+    t.integer  "picture_file_size"
     t.datetime "picture_updated_at"
   end
 
   add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
 
   create_table "tags", force: :cascade do |t|
-    t.string   "name",       limit: 255
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "user_followings", force: :cascade do |t|
-    t.integer  "user_id",      limit: 4
-    t.integer  "following_id", limit: 4
+    t.integer  "user_id"
+    t.integer  "following_id"
     t.datetime "updated_at"
     t.datetime "created_at"
   end
@@ -69,7 +72,7 @@ ActiveRecord::Schema.define(version: 20160115021810) do
     t.string   "reset_password_token",   limit: 191
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,     default: 0, null: false
+    t.integer  "sign_in_count",                      default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip",     limit: 191
@@ -82,13 +85,13 @@ ActiveRecord::Schema.define(version: 20160115021810) do
     t.date     "birthday"
     t.string   "provider",               limit: 191
     t.string   "uid",                    limit: 191
-    t.text     "facebook_token",         limit: 65535
+    t.text     "facebook_token"
     t.datetime "facebook_expires_at"
-    t.integer  "province_id",            limit: 4
-    t.integer  "district_id",            limit: 4
+    t.integer  "province_id"
+    t.integer  "district_id"
     t.string   "avatar_file_name",       limit: 255
     t.string   "avatar_content_type",    limit: 255
-    t.integer  "avatar_file_size",       limit: 4
+    t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.string   "authentication_token",   limit: 191
   end
