@@ -204,7 +204,6 @@ GEM
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    mysql2 (0.4.2)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (3.0.2)
@@ -384,7 +383,6 @@ DEPENDENCIES
   kramdown
   letter_opener
   mime-types
-  mysql2
   omniauth-facebook
   paperclip
   parallel_tests
