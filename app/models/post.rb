@@ -11,4 +11,14 @@ class Post < ActiveRecord::Base
     cover: "600x"
   }
   validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/
+
+  def file_url=(url)
+    return unless url.present?
+
+    if /^data:image/.match(url)
+      self.picture = url
+    else
+      self.picture = URI.parse(url)
+    end
+  end
 end

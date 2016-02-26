@@ -1,0 +1,8 @@
+.container-fluid
+  .panel.panel-default.col-md-6.col-md-offset-3
+    .panel-heading
+      New post
+    .panel-body
+      = form_for @post, url: posts_path do |f|
+        = render 'posts/form', f: f
+  .clearfix
