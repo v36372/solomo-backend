@@ -1,5 +1,4 @@
 class PostsController < ApplicationController
-  before_action :disable_on_production!
   before_action :find_post, except: [:index, :new]
 
   def index
