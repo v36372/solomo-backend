@@ -17,6 +17,8 @@ test:
 
 production:
   <<: *default
-  database: "solomo_production"
-  username: rails
-  password: WiNTIYaj6v
+  host: 'ec2-54-83-198-111.compute-1.amazonaws.com'
+  database: "d5pfltdrq8594q"
+  username: yddixlenahknqd
+  password: jy24KnMlHxi4892oQETUezurH5
+  port: 5432
