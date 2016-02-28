@@ -1,0 +1,28 @@
+.container-fluid
+  .panel.panel-default
+    .panel-heading
+      List of users
+    .panel-body
+      - if @users.present?
+        %table.table
+          %thead
+            %tr
+              %th
+              %th Id
+              %th Email
+              %th First name
+              %th Last name
+              %th Phone
+              %th Facebook
+          %tbody
+            - @users.each do |user|
+              %tr{user_id: user.id}
+                %td{style: 'width: 100px'}= image_tag user.avatar.url(:thumb) if user.avatar.present?
+                %td{style: 'width: 50px'} ##{user.id}
+                %td= user.email
+                %td= user.first_name
+                %td= user.last_name
+                %td= user.phone
+                %td= link_to(user.uid, "https://facebook.com/#{user.uid}") if user.uid.present?
+      - else
+        .text-center No users found
