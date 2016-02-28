@@ -61,4 +61,14 @@ group :development do
   gem 'spring-commands-rspec'
   gem "letter_opener"
   gem "parallel_tests"
+  gem 'rspec-rails'
+end
+
+group :test do
+  gem 'shoulda-matchers', '~> 3.0'
+  gem 'database_cleaner'
+  gem 'launchy'
+  gem 'selenium-webdriver'
+  gem 'thin'
+  gem 'webmock'
 end

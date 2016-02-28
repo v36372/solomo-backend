@@ -93,6 +93,8 @@ GEM
       timers (>= 4.1.1)
     celluloid-supervision (0.20.5)
       timers (>= 4.1.1)
+    childprocess (0.5.9)
+      ffi (~> 1.0, >= 1.0.11)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.8)
@@ -109,6 +111,10 @@ GEM
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
+    crack (0.4.3)
+      safe_yaml (~> 1.0.0)
+    daemons (1.2.3)
+    database_cleaner (1.5.1)
     debug_inspector (0.0.2)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
@@ -121,8 +127,10 @@ GEM
       warden (~> 1.2.3)
     devise-async (0.10.1)
       devise (~> 3.2)
+    diff-lcs (1.2.5)
     equalizer (0.0.11)
     erubis (2.7.0)
+    eventmachine (1.0.9.1)
     execjs (2.6.0)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
@@ -131,6 +139,7 @@ GEM
       multi_json (>= 1.3)
       rack-oauth2 (>= 0.14.4)
       tzinfo
+    ffi (1.9.10)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     grape (0.14.0)
@@ -164,6 +173,7 @@ GEM
       haml (>= 4.0.6, < 5.0)
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
+    hashdiff (0.3.0)
     hashie (3.4.3)
     hashie-forbidden_attributes (0.1.1)
       hashie (>= 3.0)
@@ -290,8 +300,27 @@ GEM
       railties (>= 4.2.0, < 5.1)
     rollbar (2.5.2)
       multi_json
+    rspec-core (3.4.3)
+      rspec-support (~> 3.4.0)
+    rspec-expectations (3.4.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-mocks (3.4.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-rails (3.4.2)
+      actionpack (>= 3.0, < 4.3)
+      activesupport (>= 3.0, < 4.3)
+      railties (>= 3.0, < 4.3)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.1)
     ruby_parser (3.7.2)
       sexp_processor (~> 4.1)
+    rubyzip (1.2.0)
+    safe_yaml (1.0.4)
     sass (3.4.20)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
@@ -302,7 +331,14 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    selenium-webdriver (2.52.0)
+      childprocess (~> 0.5)
+      multi_json (~> 1.0)
+      rubyzip (~> 1.0)
+      websocket (~> 1.0)
     sexp_processor (4.6.0)
+    shoulda-matchers (3.1.1)
+      activesupport (>= 4.0.0)
     sidekiq (4.0.2)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
@@ -332,6 +368,10 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     swagger-ui_rails (0.1.7)
+    thin (1.6.4)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0, >= 1.0.4)
+      rack (~> 1.0)
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (2.0.2)
@@ -358,6 +398,11 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
+    webmock (1.24.1)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
+    websocket (1.2.2)
 
 PLATFORMS
   ruby
@@ -374,6 +419,7 @@ DEPENDENCIES
   capistrano-rails-console
   capistrano-rvm (~> 0.1.1)
   coffee-rails (~> 4.1.0)
+  database_cleaner
   devise
   devise-async
   fb_graph
@@ -389,6 +435,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   kramdown
+  launchy
   letter_opener
   mime-types
   omniauth-facebook
@@ -399,8 +446,11 @@ DEPENDENCIES
   rails (= 4.2.5)
   rails_layout
   rollbar (~> 2.5.0)
+  rspec-rails
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  selenium-webdriver
+  shoulda-matchers (~> 3.0)
   sidekiq
   sidekiq-failures
   sidetiq
@@ -408,9 +458,11 @@ DEPENDENCIES
   spring-commands-rspec
   sqlite3
   swagger-ui_rails
+  thin
   uglifier (>= 1.3.0)
   unicorn
   web-console (~> 2.0)
+  webmock
 
 BUNDLED WITH
    1.11.2

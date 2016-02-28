@@ -61,15 +61,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def ensure_authentication_token
+    if authentication_token.blank?
+      self.authentication_token = generate_authentication_token
+    end
+  end
+
   private
 
   def api?
     self.validation_context == :api
   end
 
-  def ensure_authentication_token
-    if authentication_token.blank?
-      self.authentication_token = generate_authentication_token
-    end
-  end
 end
