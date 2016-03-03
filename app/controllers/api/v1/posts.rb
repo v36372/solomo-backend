@@ -8,6 +8,26 @@ module API
           authenticate_user!
         end
 
+        desc "Get all posts"
+        params do
+          requires :user_token, type: String, desc: 'Generated user token'
+        end
+        get do
+          posts = Post.all.map do |post|
+            {
+              id: post.id,
+              picture_url: post.picture.url(:original),
+              description: post.description,
+              tag_ids: post.tags.map {|t| {id: t.id, name: t.name} },
+              lat: post.lat,
+              long: post.long
+            }
+          end
+          return {
+            posts: posts
+          }
+        end
+
         desc "Create a new post"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
