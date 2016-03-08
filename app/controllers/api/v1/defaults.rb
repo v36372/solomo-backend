@@ -96,12 +96,8 @@ module API
         end
 
         rescue_from :all do |e|
-          if Rails.env.development? || Rails.env.test?
-            errors = { errors: e.message }
-            error!(errors, 500)
-          else
-            error!("Internal server error", 500)
-          end
+          errors = { errors: e.message }
+          error!(errors, 500)
         end
       end
     end
