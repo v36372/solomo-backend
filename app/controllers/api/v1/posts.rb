@@ -41,12 +41,21 @@ module API
         end
         post do
           @post = Post.new(
-            picture: params[:picture].file,
             description: params[:description],
             tag_ids: params[:tags].to_s.split(','),
             lat: params[:location_lat],
             long: params[:location_long]
           )
+          picture = params[:picture]
+          attachment = {
+            :filename => picture[:filename],
+            :type => picture[:type],
+            :headers => picture[:head],
+            :tempfile => picture[:tempfile]
+          }
+          @post.picture = ActionDispatch::Http::UploadedFile.new(attachment)
+          @post.picture_path = attachment[:filename]
+          @post.name = Time.current.to_i.to_s
           if @post.save
             return {
               id: @post.id,
