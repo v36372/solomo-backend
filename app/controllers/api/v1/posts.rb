@@ -24,7 +24,7 @@ module API
               user: {
                 name: post.user.name,
                 email: post.user.email,
-                avatar_url: @user.avatar.present? ? @user.avatar.url(:thumb) : nil
+                avatar_url: post.user.avatar.present? ? post.user.avatar.url(:thumb) : nil
               }
             }
           end
