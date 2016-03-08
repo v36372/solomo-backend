@@ -54,8 +54,6 @@ module API
             :tempfile => picture[:tempfile]
           }
           @post.picture = ActionDispatch::Http::UploadedFile.new(attachment)
-          @post.picture_path = attachment[:filename]
-          @post.name = Time.current.to_i.to_s
           if @post.save
             return {
               id: @post.id,

@@ -1,6 +1,4 @@
 class Post < ActiveRecord::Base
-  attr_accessible :name, :picture_path, :picture
-
   has_many :post_tags
   has_many :tags, through: :post_tags
   has_many :post_likes
