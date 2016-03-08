@@ -20,7 +20,12 @@ module API
               description: post.description,
               tag_ids: post.tags.map {|t| {id: t.id, name: t.name} },
               lat: post.lat,
-              long: post.long
+              long: post.long,
+              user: {
+                name: post.user.name,
+                email: post.user.email,
+                avatar_url: @user.avatar.present? ? @user.avatar.url(:thumb) : nil
+              }
             }
           end
           return {
