@@ -1,9 +1,9 @@
 module API
   module V1
-    class Posts < Grape::API
+    class Pictures < Grape::API
       include API::V1::Defaults
 
-      resource :picture, desc: "Pictures" do
+      resource :pictures, desc: "Pictures" do
         before do
           authenticate_user!
         end
@@ -28,7 +28,7 @@ module API
                 picture_url: @picture.file.url(:original)
             }
           else
-            errors = {error: @post.errors}
+            errors = {error: @picture.errors}
             return errors
           end
         end

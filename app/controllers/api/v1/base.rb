@@ -22,6 +22,7 @@ module API
       mount API::V1::Followings
       mount API::V1::Feeds
       mount API::V1::Search
+      mount API::V1::Pictures
 
       #################################
       # API Documentation
