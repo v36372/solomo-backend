@@ -11,9 +11,14 @@ module API
         desc "Get all posts"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
+          optional :user_id, type: String, desc: 'User id want to fetch the posts'
         end
         get do
-          posts = Post.all.map do |post|
+          @posts = Post.order(created_at: :desc)
+          if params[:user_id].present?
+            @posts = @posts.where(user_id: params[:user_id])
+          end
+          posts = @posts.map do |post|
             {
               id: post.id,
               picture_url: post.picture.url(:original),
