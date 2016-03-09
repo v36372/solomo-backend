@@ -3,7 +3,7 @@ module API
     class Pictures < Grape::API
       include API::V1::Defaults
 
-      resource :pictures, desc: "Pictures" do
+      resource :picture, desc: "Pictures" do
         before do
           authenticate_user!
         end
