@@ -1,5 +1,5 @@
 class Post < ActiveRecord::Base
-  has_many :post_tags
+  has_many :post_tags, dependent: :destroy
   has_many :tags, through: :post_tags
   has_many :post_likes
   has_many :liked_users, class_name: 'User', through: :post_likes, source: :user
