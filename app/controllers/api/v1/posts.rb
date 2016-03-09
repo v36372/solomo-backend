@@ -36,9 +36,10 @@ module API
         desc "Create a new post"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
-          requires :picture, desc: 'Picture to post'
+          optional :picture, desc: 'Picture to post'
+          optional :picture_id, desc: 'Picture id of uploaded image to post'
           requires :description, type: String, desc: 'Description of the post'
-          requires :tags, type: String, desc: 'Arry of tag id attached to the post'
+          optional :tags, type: String, desc: 'Arry of tag id attached to the post'
           optional :location_lat, type: Float, desc: 'Latitude of the post'
           optional :location_long, type: Float, desc: 'Longitude of the post'
           optional :start_date, type: String, desc: 'Start date of the post'
