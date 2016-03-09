@@ -51,14 +51,25 @@ module API
             lat: params[:location_lat],
             long: params[:location_long]
           )
-          picture = params[:picture]
-          attachment = {
-            :filename => picture[:filename],
-            :type => picture[:type],
-            :headers => picture[:head],
-            :tempfile => picture[:tempfile]
-          }
-          @post.picture = ActionDispatch::Http::UploadedFile.new(attachment)
+          if params[:picture_id].present?
+            picture = Picture.find_by_id params[:picture_id]
+            if picture.present?
+              @post.picture = picture.file
+            else
+              return {
+                  error: 'Picture not found'
+              }
+            end
+          else
+            picture = params[:picture]
+            attachment = {
+                :filename => picture[:filename],
+                :type => picture[:type],
+                :headers => picture[:head],
+                :tempfile => picture[:tempfile]
+            }
+            @post.picture = ActionDispatch::Http::UploadedFile.new(attachment)
+          end
           if @post.save
             return {
               id: @post.id,
