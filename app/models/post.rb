@@ -12,6 +12,30 @@ class Post < ActiveRecord::Base
   }
   validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/
 
+  def user_name
+    if post_type == 'crawl'
+      return crawl_user_name
+    else
+      return user.name
+    end
+  end
+
+  def user_avatar_url
+    if post_type == 'crawl'
+      return crawl_user_avatar
+    else
+      return user.avatar.url(:thumb) if user.avatar.present?
+    end
+  end
+
+  def user_email
+    if post_type == 'crawl'
+      return crawl_user_email
+    else
+      return user.email
+    end
+  end
+
   def picture_url=(url)
     return unless url.present?
 

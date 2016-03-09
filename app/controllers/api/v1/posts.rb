@@ -3,7 +3,7 @@ module API
     class Posts < Grape::API
       include API::V1::Defaults
 
-      resource :post, desc: "Posts" do
+      resources :posts, desc: "Posts" do
         before do
           authenticate_user!
         end
@@ -26,10 +26,11 @@ module API
               tag_ids: post.tags.map {|t| {id: t.id, name: t.name} },
               lat: post.lat,
               long: post.long,
+              post_type: post.post_type,
               user: {
-                name: post.user.name,
-                email: post.user.email,
-                avatar_url: post.user.avatar.present? ? post.user.avatar.url(:thumb) : nil
+                name: post.user_name,
+                email: post.user_email,
+                avatar_url: post.user_avatar_url
               }
             }
           end
@@ -43,20 +44,30 @@ module API
           requires :user_token, type: String, desc: 'Generated user token'
           optional :picture, desc: 'Picture to post'
           optional :picture_id, desc: 'Picture id of uploaded image to post'
+          optional :picture_url, desc: 'Picture url that needs to create a post'
           requires :description, type: String, desc: 'Description of the post'
           optional :tags, type: String, desc: 'Arry of tag id attached to the post'
           optional :location_lat, type: Float, desc: 'Latitude of the post'
           optional :location_long, type: Float, desc: 'Longitude of the post'
           optional :start_date, type: String, desc: 'Start date of the post'
           optional :end_date, type: String, desc: 'End date of the post'
+
+          optional :post_type, type: String, desc: 'Type of creating post'
+          optional :crawl_user_name, type: String, desc: 'User name of crawled data'
+          optional :crawl_user_email, type: String, desc: 'Email of crawled data'
+          optional :crawl_user_avatar, type: String, desc: 'Avatar of crawled data'
         end
         post do
           @post = Post.new(
             description: params[:description],
             tag_ids: params[:tags].to_s.split(','),
             lat: params[:location_lat],
-            long: params[:location_long]
+            long: params[:location_long],
+            post_type: params[:post_type],
+            post_type: params[:post_type]
           )
+
+          # Post picture
           if params[:picture_id].present?
             picture = Picture.find_by_id params[:picture_id]
             if picture.present?
@@ -66,6 +77,8 @@ module API
                   error: 'Picture not found'
               }
             end
+          elsif params[:picture_url].present?
+            @post.picture_url = params[:picture_url]
           else
             picture = params[:picture]
             attachment = {
@@ -76,6 +89,19 @@ module API
             }
             @post.picture = ActionDispatch::Http::UploadedFile.new(attachment)
           end
+
+          # Crawl data
+          if @post.post_type == 'crawl'
+            @post.assign_attributes(
+                crawl_user_name: params[:crawl_user_name],
+                crawl_user_email: params[:crawl_user_email],
+                crawl_user_avatar: params[:crawl_user_avatar]
+            )
+          else
+            @post.user = current_user
+          end
+
+          # Save post
           if @post.save
             return {
               id: @post.id,
@@ -83,7 +109,12 @@ module API
               description: @post.description,
               tag_ids: @post.tags.map {|t| {id: t.id, name: t.name} },
               lat: @post.lat,
-              long: @post.long
+              long: @post.long,
+              user: {
+                  name: @post.user_name,
+                  email: @post.user_email,
+                  avatar_url: @post.user_avatar_url
+              }
             }
           else
             errors = {error: @post.errors}
