@@ -1,4 +1,4 @@
-class Picture
+class Picture < ActiveRecord::Base
   has_attached_file :file, styles: {
       fb_image: "1200x630#",
       fb_image_thumb: "600x315#",
