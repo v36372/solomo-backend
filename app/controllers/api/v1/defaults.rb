@@ -78,24 +78,29 @@ module API
         end
 
         rescue_from Grape::Exceptions::ValidationErrors do |e|
+          Rollbar.error(e)
           errors = { error: JSON.parse(e.to_json) }
           rack_response errors, 404
         end
 
         rescue_from ActiveRecord::RecordNotFound do |e|
+          Rollbar.error(e)
           error!("Not found record!", 404)
         end
 
         rescue_from ActiveRecord::RecordInvalid do |e|
+          Rollbar.error(e)
           errors = { error: e.message }
           error!(errors, 422)
         end
 
         rescue_from FbGraph::InvalidToken do |e|
+          Rollbar.error(e)
           error!("Invalid access token", 422)
         end
 
         rescue_from :all do |e|
+          Rollbar.error(e)
           errors = { errors: e.message }
           error!(errors, 500)
         end
