@@ -11,7 +11,7 @@ module API
         desc "Upload new image"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
-          requires :image, type: String, desc: 'Image to upload'
+          optional :image, type: String, desc: 'Image to upload'
         end
         post do
           @picture = Picture.new
