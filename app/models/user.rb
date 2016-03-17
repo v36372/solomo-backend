@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  include PgSearch
+  multisearchable :against => [:first_name, :last_name, :email]
+
   attr_accessor :avatar_image
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :async,
          :validatable, :omniauthable, omniauth_providers: [:facebook]
@@ -65,6 +68,22 @@ class User < ActiveRecord::Base
     if authentication_token.blank?
       self.authentication_token = generate_authentication_token
     end
+  end
+
+  def to_api_json
+    processed_birthday = nil
+    processed_birthday = birthday.stftime('%d/%m/%Y') if birthday.present?
+
+    processed_avatar = nil
+    processed_avatar = avatar.url(:thumb) if avatar.present?
+
+    {
+      id: id,
+      name: name,
+      emai: email,
+      birthday: processed_birthday,
+      avatar: processed_avatar
+    }
   end
 
   private

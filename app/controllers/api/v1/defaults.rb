@@ -19,6 +19,11 @@ module API
             end
           end
 
+          def set_page
+            @page = (params[:page] || 1).to_i
+            @per_page = 10
+          end
+
           def current_user
             @user
           end

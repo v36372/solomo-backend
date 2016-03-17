@@ -1,4 +1,7 @@
 class Post < ActiveRecord::Base
+  include PgSearch
+  multisearchable :against => [:description, :address]
+
   has_many :post_tags, dependent: :destroy
   has_many :tags, through: :post_tags
   has_many :post_likes
@@ -11,6 +14,12 @@ class Post < ActiveRecord::Base
     cover: "600x"
   }
   validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/
+
+  class << self
+    def search_by_location(lat, long)
+      Post.order("SQRT((posts.lat - #{lat}) + (posts.long - #{long})) desc")
+    end
+  end
 
   def user_name
     if post_type == 'crawl'
@@ -44,5 +53,31 @@ class Post < ActiveRecord::Base
     else
       self.picture = URI.parse(url)
     end
+  end
+
+  def to_api_json
+    {
+      id: id,
+      picture_url: picture.url(:original),
+      description: description,
+      tag_ids: tags.map {|t| {id: t.id, name: t.name} },
+      lat: lat,
+      long: long,
+      post_type: post_type,
+      user: {
+        name: user_name,
+        email: user_email,
+        avatar_url: user_avatar_url
+      },
+      likes: {
+        count: post_likes.count,
+        people: post_likes.first(3).map do |p|
+          {
+            id: p.user_id,
+            nmae: p.user.name
+          }
+        end
+      }
+    }
   end
 end

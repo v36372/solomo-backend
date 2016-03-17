@@ -206,6 +206,9 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.3)
     jwt (1.5.1)
+    kaminari (0.16.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     kgio (2.10.0)
     kramdown (1.9.0)
     launchy (2.4.3)
@@ -253,6 +256,10 @@ GEM
     parallel_tests (2.4.1)
       parallel
     pg (0.18.4)
+    pg_search (1.0.5)
+      activerecord (>= 3.1)
+      activesupport (>= 3.1)
+      arel
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.4)
@@ -438,6 +445,7 @@ DEPENDENCIES
   impressionist
   jbuilder (~> 2.0)
   jquery-rails
+  kaminari
   kramdown
   launchy
   letter_opener
@@ -446,6 +454,7 @@ DEPENDENCIES
   paperclip
   parallel_tests
   pg
+  pg_search
   quiet_assets
   rails (= 4.2.5)
   rails_layout

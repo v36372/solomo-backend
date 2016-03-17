@@ -18,22 +18,7 @@ module API
           if params[:user_id].present?
             @posts = @posts.where(user_id: params[:user_id])
           end
-          posts = @posts.map do |post|
-            {
-              id: post.id,
-              picture_url: post.picture.url(:original),
-              description: post.description,
-              tag_ids: post.tags.map {|t| {id: t.id, name: t.name} },
-              lat: post.lat,
-              long: post.long,
-              post_type: post.post_type,
-              user: {
-                name: post.user_name,
-                email: post.user_email,
-                avatar_url: post.user_avatar_url
-              }
-            }
-          end
+          posts = @posts.map &:to_api_json
           return {
             posts: posts
           }
