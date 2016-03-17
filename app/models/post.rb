@@ -17,7 +17,10 @@ class Post < ActiveRecord::Base
 
   class << self
     def search_by_location(lat, long)
-      Post.order("SQRT((posts.lat - #{lat}) + (posts.long - #{long})) desc")
+      Post
+        .where.not(lat: nil)
+        .where.not(long: nil)
+        .order("SQRT((posts.lat - #{lat}) + (posts.long - #{long})) desc")
     end
   end
 

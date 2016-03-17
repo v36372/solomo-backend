@@ -14,6 +14,7 @@
               %th Last name
               %th Phone
               %th Facebook
+              %th Access Token
           %tbody
             - @users.each do |user|
               %tr{user_id: user.id}
@@ -24,5 +25,6 @@
                 %td= user.last_name
                 %td= user.phone
                 %td= link_to(user.uid, "https://facebook.com/#{user.uid}") if user.uid.present?
+                %td= user.authentication_token
       - else
         .text-center No users found
