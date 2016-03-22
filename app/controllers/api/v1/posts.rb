@@ -117,14 +117,7 @@ module API
             requires :user_token, type: String, desc: 'Generated user token'
           end
           get do
-            return {
-              id: @post.id,
-              picture_url: @post.picture.url(:original),
-              description: @post.description,
-              tag_ids: @post.tags.map {|t| {id: t.id, name: t.name} },
-              lat: @post.lat,
-              long: @post.long
-            }
+            return @post.to_api_json
           end
 
           desc "Update description of the post"
