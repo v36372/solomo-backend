@@ -18,7 +18,10 @@
                 %td{style: 'width: 50px'} ##{post.id}
                 %td{style: 'width: 300px; height: auto;'}= image_tag post.picture.url(:fb_image_thumb), class: 'img-responsive' if post.picture.present?
                 %td= post.description
-                %td{style: 'width: 200px'}= post.user_name
+                %td{style: 'width: 300px'}
+                  = post.user_name
+                  - if post.user.present?
+                    (#{post.user.email})
                 %td
                   #{post.lat}, #{post.long}
       - else
