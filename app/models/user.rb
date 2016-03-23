@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
   has_many :post_likes
   has_many :liked_posts, class_name: 'Post', through: :post_likes, source: :post
 
+  has_many :comments, dependent: :destroy
+
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\Z/
   validates :first_name, :last_name, presence: true, unless: :api?
 

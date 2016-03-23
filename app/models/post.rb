@@ -8,6 +8,8 @@ class Post < ActiveRecord::Base
   has_many :liked_users, class_name: 'User', through: :post_likes, source: :user
   belongs_to :user
 
+  has_many :comments, dependent: :destroy
+
   has_attached_file :picture, styles: {
     fb_image: "1200x630#",
     fb_image_thumb: "600x315#",
@@ -83,4 +85,5 @@ class Post < ActiveRecord::Base
       }
     }
   end
+
 end

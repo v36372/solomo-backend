@@ -2,7 +2,9 @@ class PostsController < ApplicationController
   before_action :find_post, except: [:index, :new]
 
   def index
-    @posts = Post.all
+    @page = params[:page] || 1
+    @per_page = params[:per_page] || 20
+    @posts = Post.all.order(created_at: :desc).page(@page).per(@per_page)
   end
 
   def new
@@ -16,6 +18,12 @@ class PostsController < ApplicationController
     else
       render :new
     end
+  end
+
+  def show
+    user_ids = User.all.pluck(:id) - @post.post_likes.pluck(:user_id)
+    @like_as = User.where(id: user_ids)
+    @comment_as = User.all.pluck(:id)
   end
 
   def edit
@@ -32,6 +40,9 @@ class PostsController < ApplicationController
   end
 
   def destroy
+    @post.destroy
+    flash[:notice] = 'Destroy the post successfully'
+    redirect_to posts_path
   end
 
   private

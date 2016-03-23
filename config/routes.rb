@@ -5,8 +5,12 @@ Rails.application.routes.draw do
   root 'posts#index'
 
   resources :posts do
+    resources :comments do
+    end
+    resources :post_likes do
+    end
   end
 
-  resources :users, only: [:index, :edit] do
+  resources :users, only: [:index, :show, :edit] do
   end
 end

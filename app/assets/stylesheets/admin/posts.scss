@@ -1,0 +1,41 @@
+[comment_id] {
+  .heading {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    .avatar {
+      margin-right: 10px;
+      img {
+        height: 32px;
+        width: 32px;
+        border-radius: 100%;
+      }
+    }
+    .name {
+      margin-right: 10px;
+    }
+  }
+  .body {
+    .date {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 15px;
+    }
+    .content {
+      margin-bottom: 15px;
+    }
+  }
+  margin-bottom: 10px;
+  .child_comments {
+    margin-left: 30px;
+    padding-left: 10px;
+    border-left: 1px #ddd solid;
+  }
+}
+[post_like_id] {
+  img {
+    height: 32px;
+    width: 32px;
+    border-radius: 100%;
+  }
+}

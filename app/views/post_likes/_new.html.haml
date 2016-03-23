@@ -1,0 +1,5 @@
+- return unless users.present?
+= form_for PostLike.new, url: post_post_likes_path(post), method: :post, class: 'top-10' do |f|
+  = f.select :user_id, users.map {|u| ["#{u.name} (#{u.email})", u.id]}, {}, class: 'form-control'
+  .text-center.top-6
+    = f.submit 'Like as this user', class: 'btn btn-primary'

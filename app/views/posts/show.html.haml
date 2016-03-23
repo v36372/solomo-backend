@@ -1,0 +1,92 @@
+.container-fluid
+  .panel.panel-default
+    .panel-heading
+      Basic information
+    .panel-body
+      .col-md-6
+        = image_tag @post.picture.url(:fb_image), class: 'img-responsive'
+      .col-md-6
+        .form-group
+          %label Post id
+          .content= @post.id
+        .form-group
+          %label User
+          .content
+            = @post.user_name
+            - if @post.user.present?
+              (#{link_to @post.user.email, user_path(@post.user)})
+        .form-group
+          %label Descript
+          .content
+            = simple_format(@post.description)
+        - if @post.lat.present? && @post.long.present?
+          .form-group
+            %label Lat, long
+            .content #{@post.lat}, #{@post.long}
+        .form-group
+          %label Created at
+          .content
+            = time_ago_in_words(@post.created_at)
+            ago
+        .form-group
+          = link_to 'Destroy', post_path(@post), method: :delete, class: 'btn btn-danger'
+      .clearfix
+  - if @post.lat.present? && @post.long.present?
+    .panel.panel-default
+      .panel-heading
+        Map
+      .panel-body
+        #map{style: 'width: 100%; height: 400px; background-color: #CCC;'}
+        %script{src:"https://maps.googleapis.com/maps/api/js?key=AIzaSyDSAyIA48rQ8VJtuJ140hblQaU3XCrT6bI&callback=initMap", async: true, defer: true}
+        :javascript
+          function initMap() {
+            var mapDiv = document.getElementById('map');
+            var map = new google.maps.Map(mapDiv, {
+              center: {lat: #{@post.lat}, lng: #{@post.long}},
+              zoom: 12
+            });
+             var marker = new google.maps.Marker({
+              position: {lat: #{@post.lat}, lng: #{@post.long}},
+              map: map
+            });
+          }
+  .row
+    .col-md-6
+      .panel.panel-default
+        .panel-heading
+          .pull-left
+            Likes
+          .pull-right
+            - if @post.post_likes.present?
+              = @post.post_likes.count
+              likes
+          .clearfix
+        .panel-body
+          - if @post.post_likes.blank?
+            .text-center
+              No likes yet
+          - else
+            %table.table
+              - @post.post_likes.order(created_at: :desc).each do |post_like|
+                = render 'post_likes/show', post_like: post_like
+          .new_like= render 'post_likes/new', users: @like_as, post: @post
+    .col-md-6
+      .panel.panel-default
+        .panel-heading
+          .pull-left
+            Comments
+          .pull-right
+            - if @post.comments.present?
+              = @post.comments.count
+              comments
+          .clearfix
+        .panel-body
+          - if @post.comments.blank?
+            .text-center
+              No comments yet
+          - else
+            %table
+              - @post.comments.root.in_order.each do |comment|
+                = render 'comments/show', comment: comment
+          .new_comment= render 'comments/new', post: @post
+    .clearfix

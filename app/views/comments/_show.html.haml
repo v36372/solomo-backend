@@ -1,0 +1,15 @@
+.comment{comment_id: comment.id}
+  .heading
+    - if comment.user.avatar.present?
+      .avatar= image_tag comment.user.avatar
+    .name= link_to "#{comment.user.name} (#{comment.user.email})", user_path(comment.user)
+    = link_to 'Delete', post_comment_path(comment.post, comment), method: :delete, class: 'label label-danger'
+  .body
+    .date= time_ago_in_words(comment.created_at)
+    .content= simple_format(comment.content)
+    .child_comments
+      - comment.child_comments.each do |comment|
+        = render 'comments/show', comment: comment
+      - if comment.parent_comment.blank?
+        .new_comment
+          = render 'comments/new', post: comment.post, comment: comment

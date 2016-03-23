@@ -1,0 +1,8 @@
+- comment ||= nil
+= form_for Comment.new, url: post_comments_path(post), method: :post do |f|
+  = f.hidden_field :parent_id, value: comment.try(:id)
+  .form-group
+    = f.select :user_id, User.all.map {|u| ["#{u.name} (#{u.email})", u.id]}, {}, class: 'form-control'
+    = f.text_area :content, class: 'form-control top-6'
+  .text-right
+    = f.submit 'Comment', class: 'btn btn-primary'
