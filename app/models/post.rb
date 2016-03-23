@@ -76,10 +76,27 @@ class Post < ActiveRecord::Base
       },
       likes: {
         count: post_likes.count,
-        people: post_likes.first(3).map do |p|
+        people: post_likes.map do |p|
           {
-            id: p.user_id,
-            nmae: p.user.name
+            created_at: p.created_at,
+            user: p.user.to_api_json
+          }
+        end
+      },
+      comments: {
+        count: comments.count,
+        comments: comments.root.in_order.map do|comment|
+          {
+            user: comment.user.to_api_json,
+            created_at: comment.created_at,
+            content: comment.content,
+            child_comments: comment.child_comments.map do |child_comment|
+              {
+                user: child_comment.user.to_api_json,
+                created_at: child_comment.created_at,
+                content: child_comment.content
+              }
+            end
           }
         end
       }
