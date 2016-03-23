@@ -1,5 +1,5 @@
 %tr{post_like_id: post_like.user.id}
-  %td= image_tag user.avatar.url(:thumb) if post_like.user.avatar.present?
+  %td= image_tag post_like.user.avatar.url(:thumb) if post_like.user.avatar.present?
   %td= link_to "#{post_like.user.name} (#{post_like.user.email})", user_path(post_like.user)
   %td #{time_ago_in_words(post_like.created_at)} ago
   %td= link_to 'Delete', post_post_like_path(post_like.post, post_like), method: :delete, class: 'label label-danger'
