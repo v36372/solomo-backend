@@ -27,7 +27,7 @@ module API
           fields.each do |field|
             case field
             when :birthday
-              results[:birthday] = @user.birthday.stftime('%d/%m/%Y') if @user.birthday.present?
+              results[:birthday] = @user.birthday.strftime('%d/%m/%Y') if @user.birthday.present?
             when :avatar_url
               results[:avatar_url] = @user.avatar.url(:thumb) if @user.avatar.present?
             else
@@ -51,7 +51,7 @@ module API
           if @user.save
             return {
               name: @user.name,
-              birthday: @user.birthday.try(:stftime, '%d/%m/%Y')
+              birthday: @user.birthday.try(:strftime, '%d/%m/%Y')
             }
           else
             errors = {error: @user.errors}

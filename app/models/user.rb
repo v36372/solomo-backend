@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
 
   def to_api_json
     processed_birthday = nil
-    processed_birthday = birthday.stftime('%d/%m/%Y') if birthday.present?
+    processed_birthday = birthday.strftime('%d/%m/%Y') if birthday.present?
 
     processed_avatar = nil
     processed_avatar = avatar.url(:thumb) if avatar.present?
