@@ -88,6 +88,15 @@ class User < ActiveRecord::Base
     }
   end
 
+  def interaction_count
+    posts.count + post_likes.count + comments.count
+  end
+
+  def age
+    return nil if birthday.nil?
+    Time.current.beginning_of_year.year - birthday.beginning_of_year.year
+  end
+
   private
 
   def api?

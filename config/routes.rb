@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   mount API::Base, at: "/"
   get "/api/docs" => 'docs#index'
 
-  root 'posts#index'
+  root 'dashboard#show'
 
   resources :posts do
     resources :comments do

@@ -1,0 +1,19 @@
+.user_row[user_id] {
+  margin-bottom: 7px;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  justify-content: space-between;
+  .left {
+    display: -webkit-flex;
+    align-items: center;
+  }
+  .avatar {
+    margin-right: 10px;
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: 100%;
+    }
+  }
+}

@@ -60,6 +60,10 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def interaction_count
+    post_likes.count + comments.count
+  end
+
   def to_api_json
     {
       id: id,

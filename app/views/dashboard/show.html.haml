@@ -1,0 +1,308 @@
+.container-fluid
+  .general.row
+    .col-md-3
+      .panel.panel-primary
+        .panel-heading
+          User
+        .panel-body.text-center
+          %h1{style: 'font-size: 70px; margin: 10px 0px; padding: 0px;'}= @users.count
+    .col-md-3
+      .panel.panel-primary
+        .panel-heading
+          Post
+        .panel-body.text-center
+          %h1{style: 'font-size: 70px; margin: 10px 0px; padding: 0px;'}= @posts.count
+    .col-md-3
+      .panel.panel-primary
+        .panel-heading
+          Likes
+        .panel-body.text-center
+          %h1{style: 'font-size: 70px; margin: 10px 0px; padding: 0px;'}= @likes.count
+    .col-md-3
+      .panel.panel-primary
+        .panel-heading
+          Comments
+        .panel-body.text-center
+          %h1{style: 'font-size: 70px; margin: 10px 0px; padding: 0px;'}= @comments.count
+    .clearfix
+  .fancy
+    .panel.panel-primary
+      .panel-heading
+        Post graph
+      .panel-body
+        .post_graph
+          %canvas{id: "postGraph", height: "400"}
+  .more_fancy.row
+    .col-md-6
+      .panel.panel-primary
+        .panel-heading
+          Post distributing map
+        .panel-body
+          #map{style: 'width: 100%; height: 600px; background-color: #CCC;'}
+          %script{src:"https://maps.googleapis.com/maps/api/js?key=AIzaSyDSAyIA48rQ8VJtuJ140hblQaU3XCrT6bI&callback=initMap", async: true, defer: true}
+          :javascript
+            function initMap() {
+              var mapDiv = document.getElementById('map');
+              var map = new google.maps.Map(mapDiv, {
+                center: {lat: #{@posts_with_location.first.lat}, lng: #{@posts_with_location.first.long}},
+                zoom: 10
+              });
+              var locations = JSON.parse('#{j(@posts_with_location.map {|p| [p.lat, p.long]}.to_json)}');
+              for (var i = 0; i < locations.length; i++) {
+                var marker = new google.maps.Marker({
+                  position: {lat: locations[i][0], lng: locations[i][1]},
+                  map: map
+                });
+              }
+            }
+    .col-md-6
+      .row
+        .col-md-6
+          .panel.panel-primary
+            .panel-heading
+              Top tag this week
+            .panel-body
+              - @tags.each do |tag|
+                .tag
+                  .pull-left= tag.name
+                  .pull-right.label.label-danger= PostTag.where(tag_id: tag.id).count
+                  .clearfix
+        .col-md-6
+          .panel.panel-primary
+            .panel-heading
+              Top interaction this week
+            .panel-body
+              - @posts_top_interaction.each do |post|
+                .post
+                  .pull-left= link_to "##{post.id}", post_path(post)
+                  .pull-right
+                    .label.label-danger
+                      = post.comments.count
+                      comments
+                    .label.label-success
+                      = post.post_likes.count
+                      likes
+                  .clearfix
+        .clearfix
+    .col-md-6
+      .panel.panel-primary
+        .panel-heading
+          Post interact segments
+        .panel-body
+          .row
+            .col-md-6
+              .post_like_graph
+                %canvas{id: "postLikeGraph", height: "250"}
+              .top-10.text-center
+                Likes segment
+            .col-md-6
+              .post_comment_graph
+                %canvas{id: "postCommentGraph", height: "250"}
+              .top-10.text-center
+                Comments segment
+            .clearfix
+  .another_fancy
+    .panel.panel-primary
+      .panel-heading
+        User graph
+      .panel-body
+        .user_graph
+          %canvas{id: "userChart", height: "400"}
+  .much_more_fancy.row
+    .col-md-3
+      .panel.panel-primary
+        .panel-heading
+          Top users this week
+        .panel-body
+          - User.order(created_at: :desc).limit(5).each do |user|
+            .user_row{user_id: user.id}
+              .left
+                - if user.avatar.present?
+                  .avatar= image_tag user.avatar.url(:thumb)
+                .name= link_to user.name, user_path(user)
+              .right
+                .label.label-info
+                  = user.posts.count
+                  p
+                .label.label-danger
+                  = user.comments.count
+                  c
+                .label.label-success
+                  = user.post_likes.count
+                  l
+    .col-md-3
+      .panel.panel-primary
+        .panel-heading
+          Newest users
+        .panel-body
+          - User.order(created_at: :desc).limit(5).each do |user|
+            .user_row{user_id: user.id}
+              .left
+                - if user.avatar.present?
+                  .avatar= image_tag user.avatar.url(:thumb)
+                .name= link_to user.name, user_path(user)
+    .col-md-6
+      .panel.panel-primary
+        .panel-heading
+          User distribution
+        .panel-body
+          .row
+            .col-md-6
+              .user_age_graph
+                %canvas{id: "userAgeGraph", height: "250"}
+              .top-10.text-center
+                Age segment
+            .col-md-6
+              .user_active_graph
+                %canvas{id: "userActiveGraph", height: "250"}
+              .top-10.text-center
+                Active segment
+    .clearfix
+:javascript
+  $(function() {
+    var userCanvas, userChart, lineUserChart;
+    var user_type = "days";
+    var user_method = "all"
+    var userOptions = {
+      tooltipTemplate: function(valuesObject){
+        return valuesObject.label + ": " + valuesObject.value + " posts";
+      }
+    }
+    var width = $(".user_graph").width();
+    userCanvas = document.getElementById("userChart");
+    userCanvas.width = width;
+    var ctx = userCanvas.getContext("2d");
+    userChart = new Chart(ctx);
+    lineUserChart = userChart.Line(JSON.parse('#{j(@user_data.to_json)}'), userOptions);
+
+    var postsCanvas, postGraph, lineUserChart;
+    var posts_type = "days";
+    var posts_method = "all"
+    var postsOptions = {
+      tooltipTemplate: function(valuesObject){
+        return valuesObject.label + ": " + valuesObject.value + " posts";
+      }
+    }
+    var width = $(".post_graph").width();
+    postsCanvas = document.getElementById("postGraph");
+    postsCanvas.width = width;
+    var ctx = postsCanvas.getContext("2d");
+    postGraph = new Chart(ctx);
+    lineUserChart = postGraph.Line(JSON.parse('#{j(@post_data.to_json)}'), userOptions);
+
+    var postLikeGraphData = [
+      {
+          value: #{@posts.select { |p| p.post_likes.count < 5}.length},
+          color:"#F7464A",
+          highlight: "#FF5A5E",
+          label: "Likes below 5"
+      },
+      {
+          value: #{@posts.select { |p| [5..10].include?(p.post_likes.count)}.length},
+          color: "#46BFBD",
+          highlight: "#5AD3D1",
+          label: "Likes from 5 to 10"
+      },
+      {
+          value: #{@posts.select { |p| [11..20].include?(p.post_likes.count)}.length},
+          color: "#FDB45C",
+          highlight: "#FFC870",
+          label: "Likes from 10 to 20"
+      },
+      {
+          value: #{@posts.select { |p| p.post_likes.count > 20}.length},
+          color: "#5ca6fc",
+          highlight: "#7cb8ff",
+          label: "Likes above 20"
+      }
+    ]
+    var width = $(".post_like_graph").width();
+    var postLikeCanvas = document.getElementById("postLikeGraph");
+    var ctx = postLikeCanvas.getContext("2d");
+    postLikeCanvas.width = width;
+    var postLikeGraph = new Chart(ctx).Doughnut(postLikeGraphData);
+
+    var postCommentGraphData = [
+      {
+          value: #{@posts.select { |p| p.comments.count < 5}.length},
+          color:"#F7464A",
+          highlight: "#FF5A5E",
+          label: "Comments below 5"
+      },
+      {
+          value: #{@posts.select { |p| (5..10).include?(p.comments.count)}.length},
+          color: "#46BFBD",
+          highlight: "#5AD3D1",
+          label: "Comments from 5 to 10"
+      },
+      {
+          value: #{@posts.select { |p| (11..20).include?(p.comments.count)}.length},
+          color: "#FDB45C",
+          highlight: "#FFC870",
+          label: "Comments from 10 to 20"
+      },
+      {
+          value: #{@posts.select { |p| p.comments.count > 20}.length},
+          color: "#5ca6fc",
+          highlight: "#7cb8ff",
+          label: "Comments above 20"
+      }
+    ]
+    var width = $(".post_comment_graph").width();
+    var postCommentCanvas = document.getElementById("postCommentGraph");
+    var ctx = postCommentCanvas.getContext("2d");
+    postCommentCanvas.width = width;
+    var postCommentGraph = new Chart(ctx).Doughnut(postCommentGraphData);
+
+    var userAgeGraph = [
+      {
+          value: #{@users.select { |u| u.age.present? && u.age < 17}.length},
+          color:"#F7464A",
+          highlight: "#FF5A5E",
+          label: "Age below 17"
+      },
+      {
+          value: #{@users.select { |u| u.age.present? && (17..25).include?( u.age )}.length},
+          color: "#46BFBD",
+          highlight: "#5AD3D1",
+          label: "Age from 17 - 25"
+      },
+      {
+          value: #{@users.select { |u| u.age.present? && (25..30).include?(u.age)}.length},
+          color: "#FDB45C",
+          highlight: "#FFC870",
+          label: "Age from 25 - 30"
+      },
+      {
+          value: #{@users.select { |u| u.age.present? && u.age > 30}.length},
+          color: "#5ca6fc",
+          highlight: "#7cb8ff",
+          label: "Aget above 30"
+      }
+    ]
+    var width = $(".user_age_graph").width();
+    var userAgeCanvse = document.getElementById("userAgeGraph");
+    var ctx = userAgeCanvse.getContext("2d");
+    userAgeCanvse.width = width;
+    var userAgeGraph = new Chart(ctx).Doughnut(userAgeGraph);
+
+    var userActiveGraph = [
+      {
+          value: #{@users.select { |u| u.posts.present? || u.comments.present? }.length},
+          color:"#F7464A",
+          highlight: "#FF5A5E",
+          label: "Inactive user"
+      },
+      {
+          value: #{@users.select { |u| u.posts.blank? || u.comments.blank?}.length},
+          color: "#46BFBD",
+          highlight: "#5AD3D1",
+          label: "Active user"
+      }
+    ]
+    var width = $(".user_active_graph").width();
+    var userActiveCanvse = document.getElementById("userActiveGraph");
+    var ctx = userActiveCanvse.getContext("2d");
+    userActiveCanvse.width = width;
+    var userActiveGraph = new Chart(ctx).Doughnut(userActiveGraph);
+  });
