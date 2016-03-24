@@ -23,6 +23,7 @@ module API
       mount API::V1::Feeds
       mount API::V1::Search
       mount API::V1::Pictures
+      mount API::V1::Comments
 
       #################################
       # API Documentation

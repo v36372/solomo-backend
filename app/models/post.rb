@@ -89,20 +89,7 @@ class Post < ActiveRecord::Base
       },
       comments: {
         count: comments.count,
-        comments: comments.root.in_order.map do|comment|
-          {
-            user: comment.user.to_api_json,
-            created_at: comment.created_at,
-            content: comment.content,
-            child_comments: comment.child_comments.map do |child_comment|
-              {
-                user: child_comment.user.to_api_json,
-                created_at: child_comment.created_at,
-                content: child_comment.content
-              }
-            end
-          }
-        end
+        comments: comments.root.in_order.map(&:to_api_json)
       }
     }
   end

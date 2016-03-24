@@ -14,8 +14,13 @@ module API
           requires :user_token, type: String, desc: 'Generated user token'
         end
         get do
+          if @post.blank?
+            return {
+              error: 'Post not found'
+            }
+          end
           return {
-            like_count: @post.liked_users.count,
+            count: @post.liked_users.count,
             likes: @post.liked_users.map do |user|
               {
                 user_id: user.id,
@@ -29,12 +34,18 @@ module API
         desc "Like a post"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
+          requires :post_id, type: Integer, desc: 'Post id'
         end
-        post do
-          PostLike.find_or_create_by(user_id: @user.id, post_id: @post.id)
+        post :like do
+          if @post.blank?
+            return {
+              error: 'Post not found'
+            }
+          end
+          PostLike.find_or_create_by(user_id: current_user.id, post_id: @post.id)
           @post.reload
           return {
-            like_count: @post.liked_users.count,
+            count: @post.liked_users.count,
             likes: @post.liked_users.map do |user|
               {
                 user_id: user.id,
@@ -48,19 +59,29 @@ module API
         desc "Unlike a post"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
+          requires :post_id, type: Integer, desc: 'Post id'
         end
-        delete do
-          @like = PostLike.find_by(user_id: @user.id, post_id: @post.id)
+        post :unlike do
+          if @post.blank?
+            return {
+              error: 'Post not found'
+            }
+          end
+          @like = PostLike.find_by(user_id: current_user.id, post_id: @post.id)
           @like.destroy if @like.present?
           @post.reload
           return {
-            like_count: @post.liked_users.count,
+            count: @post.liked_users.count,
             likes: @post.liked_users.map do |user|
-              {
-                user_id: user.id,
-                name: user.name,
-                avatar_url: user.avatar.url(:thumb)
-              }
+              if user.present?
+                {
+                  user_id: user.id,
+                  name: user.name,
+                  avatar_url: user.avatar.url(:thumb)
+                }
+              else
+                nil
+              end
             end
           }
         end

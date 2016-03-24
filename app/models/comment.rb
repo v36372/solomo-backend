@@ -19,4 +19,18 @@ class Comment < ActiveRecord::Base
       return false
     end
   end
+
+  def to_api_json
+    child_comments_json = []
+    if child_comments.present?
+      child_comments_json = child_comments.map &:to_api_json
+    end
+    {
+      id: self.id,
+      user: self.user.to_api_json,
+      created_at: self.created_at,
+      content: self.content,
+      child_comments: child_comments_json
+    }
+  end
 end
