@@ -72,7 +72,7 @@
             .panel-heading
               Top interaction this week
             .panel-body
-              - @posts_top_interaction.first(5).each do |post|
+              - @posts_top_interaction.first(10).each do |post|
                 .post
                   .pull-left= link_to "##{post.id}", post_path(post)
                   .pull-right
@@ -114,7 +114,7 @@
         .panel-heading
           Top users this week
         .panel-body
-          - User.order(created_at: :desc).limit(5).each do |user|
+          - @users_top_interaction.first(10).each do |user|
             .user_row{user_id: user.id}
               .left
                 - if user.avatar.present?
@@ -135,7 +135,7 @@
         .panel-heading
           Newest users
         .panel-body
-          - User.order(created_at: :desc).limit(5).each do |user|
+          - User.order(created_at: :desc).limit(10).each do |user|
             .user_row{user_id: user.id}
               .left
                 - if user.avatar.present?
@@ -198,13 +198,13 @@
           label: "Likes below 5"
       },
       {
-          value: #{@posts.select { |p| [5..10].include?(p.post_likes.count)}.length},
+          value: #{@posts.select { |p| (5..10).include?(p.post_likes.count)}.length},
           color: "#46BFBD",
           highlight: "#5AD3D1",
           label: "Likes from 5 to 10"
       },
       {
-          value: #{@posts.select { |p| [11..20].include?(p.post_likes.count)}.length},
+          value: #{@posts.select { |p| (11..20).include?(p.post_likes.count)}.length},
           color: "#FDB45C",
           highlight: "#FFC870",
           label: "Likes from 10 to 20"
