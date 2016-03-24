@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160323200953) do
+ActiveRecord::Schema.define(version: 20160324151219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,7 +117,7 @@ ActiveRecord::Schema.define(version: 20160323200953) do
     t.string   "first_name",             limit: 191
     t.string   "last_name",              limit: 191
     t.string   "phone",                  limit: 191
-    t.date     "birthday"
+    t.datetime "birthday"
     t.string   "provider",               limit: 191
     t.string   "uid",                    limit: 191
     t.text     "facebook_token"
