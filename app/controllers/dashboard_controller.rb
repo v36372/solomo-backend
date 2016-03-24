@@ -2,9 +2,9 @@ class DashboardController < ApplicationController
   def show
     @posts = Post.all
     @posts_with_location = Post.where.not(lat: nil)
-    @posts_top_interaction = Post.all.sort_by { |p| p.interaction_count }
+    @posts_top_interaction = Post.all.sort_by { |p| p.interaction_count }.reverse
     @users = User.all
-    @users_top_interaction = User.all.sort_by { |u| u.interaction_count }
+    @users_top_interaction = User.all.sort_by { |u| u.interaction_count }.reverse
     @likes = PostLike.all
     @comments = Comment.all
     @tags = Tag.top_this_week.first(10)
