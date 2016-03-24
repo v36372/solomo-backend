@@ -72,7 +72,7 @@
             .panel-heading
               Top interaction this week
             .panel-body
-              - @posts_top_interaction.each do |post|
+              - @posts_top_interaction.limit(5).each do |post|
                 .post
                   .pull-left= link_to "##{post.id}", post_path(post)
                   .pull-right
