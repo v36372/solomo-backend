@@ -58,7 +58,7 @@
                 var infowindow = new google.maps.InfoWindow({
                   content: '<a target="_blank" href="' + locations[i][4] + '">Open post</a></p></p>'
                 });
-                locations[i][6] = marker;
+                locations[i][6] = infowindow;
                 marker.addListener('click', function(event) {
                   locations[this.index][6].open(map, locations[this.index][5]);
                   event.preventDefault();
