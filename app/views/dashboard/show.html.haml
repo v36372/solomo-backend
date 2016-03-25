@@ -47,11 +47,20 @@
                 center: {lat: #{@posts_with_location.first.lat}, lng: #{@posts_with_location.first.long}},
                 zoom: 10
               });
-              var locations = JSON.parse('#{j(@posts_with_location.map {|p| [p.lat, p.long]}.to_json)}');
+              var locations = JSON.parse('#{j(@posts_with_location.map {|p| [p.lat, p.long, p.user_name, p.description, post_path(p)]}.to_json)}');
               for (var i = 0; i < locations.length; i++) {
                 var marker = new google.maps.Marker({
                   position: {lat: locations[i][0], lng: locations[i][1]},
-                  map: map
+                  map: map,
+                  index: i
+                });
+                locations[i][5] = marker;
+                var infowindow = new google.maps.InfoWindow({
+                  content: '<p><strong>' + locations[i][2] + '</strong></p><p>' + locations[i][3] + '</p><p><a target="_blank" href="' + locations[i][4] + '">Open post</a></p></p>'
+                });
+                marker.addListener('click', function(event) {
+                  infowindow.open(map, locations[this.index][5]);
+                  event.preventDefault();
                 });
               }
             }
