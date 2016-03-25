@@ -58,8 +58,9 @@
                 var infowindow = new google.maps.InfoWindow({
                   content: '<p><strong>' + locations[i][2] + '</strong></p><p>' + locations[i][3] + '</p><p><a target="_blank" href="' + locations[i][4] + '">Open post</a></p></p>'
                 });
+                locations[i][6] = marker;
                 marker.addListener('click', function(event) {
-                  infowindow.open(map, locations[this.index][5]);
+                  locations[this.index][6].open(map, locations[this.index][5]);
                   event.preventDefault();
                 });
               }
