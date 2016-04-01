@@ -12,15 +12,25 @@ module API
         params do
           requires :user_token, type: String, desc: 'Generated user token'
           optional :user_id, type: String, desc: 'User id want to fetch the posts'
+          optional :page, type: Integer, desc: 'Page want to fetch'
         end
         get do
+          per_page = 20
+          page = (params[:page] || 1).to_i
           @posts = Post.order(created_at: :desc)
           if params[:user_id].present?
             @posts = @posts.where(user_id: params[:user_id])
           end
+          if page.present?
+            @posts = @posts.page(page).per(per_page)
+          end
           posts = @posts.map &:to_api_json
           return {
-            posts: posts
+            posts: posts,
+            pagination: {
+              current_page: page,
+              total_pages: @posts.total_pages
+            }
           }
         end
 

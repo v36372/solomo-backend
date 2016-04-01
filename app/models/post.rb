@@ -26,6 +26,14 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def user_id
+    if post_type == 'crawl'
+      return nil
+    else
+      return user.id
+    end
+  end
+
   def user_name
     if post_type == 'crawl'
       return crawl_user_name
@@ -74,6 +82,7 @@ class Post < ActiveRecord::Base
       long: long,
       post_type: post_type,
       user: {
+        id: user_id,
         name: user_name,
         email: user_email,
         avatar_url: user_avatar_url
