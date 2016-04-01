@@ -80,7 +80,7 @@ class Post < ActiveRecord::Base
       tag_ids: tags.map {|t| {id: t.id, name: t.name} },
       lat: lat,
       long: long,
-      post_type: post_type,
+      post_type: post_type || 'user',
       user: {
         id: user_id,
         name: user_name,
