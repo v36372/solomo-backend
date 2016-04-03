@@ -95,9 +95,11 @@ module API
           requires :user_token, type: String, desc: 'Generated user token'
           requires :lat, type: Float, desc: 'Keyword to serach'
           requires :long, type: Float, desc: 'Keyword to serach'
+          requires :zoom, type: Integer, desc: 'Zoom level of google map'
         end
         get :posts_by_location do
-          results = Post.search_by_location(params[:lat], params[:long]).limit(10)
+          limit = params[:zoom].present? ? 30 - params[:zoom] : 15
+          results = Post.search_by_location(params[:lat], params[:long]).limit(limit)
           json_results = results.map do |result|
             {
               result_type: 'Post',
