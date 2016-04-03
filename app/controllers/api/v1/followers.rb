@@ -41,7 +41,7 @@ module API
           requires :following_id, type: Integer, desc: 'User id of target user'
         end
         post do
-          following = User.find_by_id(params[:user_id])
+          following = User.find_by_id(params[:following_id])
           if following.present?
             user_following = UserFollowing.find_or_create_by(
               user: current_user,
