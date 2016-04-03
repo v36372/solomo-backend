@@ -89,6 +89,8 @@ class Post < ActiveRecord::Base
       lat: lat,
       long: long,
       post_type: post_type || 'user',
+      promotion_type: promotion_type,
+      promotion_value: promotion_value,
       user: {
         id: user_id,
         name: user_name,

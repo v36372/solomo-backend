@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160403041856) do
+ActiveRecord::Schema.define(version: 20160403150057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,8 @@ ActiveRecord::Schema.define(version: 20160403041856) do
     t.text     "crawl_user_avatar"
     t.string   "crawl_user_email"
     t.text     "address"
+    t.string   "promotion_type"
+    t.text     "promotion_value"
   end
 
   add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree

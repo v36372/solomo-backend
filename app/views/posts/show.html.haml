@@ -16,9 +16,14 @@
             - if @post.user.present?
               (#{link_to @post.user.email, user_path(@post.user)})
         .form-group
-          %label Descript
+          %label Description
           .content
             = simple_format(@post.description)
+        - if @post.promotion_type.present?
+          .form-group
+            %label Promotion
+            .content
+              #{@post.promotion_type} #{@post.promotion_value}
         - if @post.lat.present? && @post.long.present?
           .form-group
             %label Lat, long

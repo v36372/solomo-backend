@@ -46,6 +46,8 @@ module API
           optional :location_long, type: Float, desc: 'Longitude of the post'
           optional :start_date, type: String, desc: 'Start date of the post'
           optional :end_date, type: String, desc: 'End date of the post'
+          optional :promotion_type, type: String, desc: 'Promotion type. Allowed values: discount, bonus'
+          optional :promotion_value, type: String, desc: 'Value of the promotion. For example: if you want to mark this post discount 30%, set promotion_type = "discount" and promotion_value = "30%"'
 
           optional :post_type, type: String, desc: 'Type of creating post'
           optional :crawl_user_name, type: String, desc: 'User name of crawled data'
@@ -59,7 +61,9 @@ module API
             lat: params[:location_lat],
             long: params[:location_long],
             post_type: params[:post_type],
-            post_type: params[:post_type]
+            post_type: params[:post_type],
+            promotion_type: params[:promotion_type],
+            promotion_value: params[:promotion_value]
           )
 
           # Post picture
