@@ -18,11 +18,19 @@ class Post < ActiveRecord::Base
   validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/
 
   class << self
-    def search_by_location(lat, long)
-      Post
-        .where.not(lat: nil)
-        .where.not(long: nil)
-        .order("((posts.lat - #{lat})*(posts.lat - #{lat}) + (posts.long - #{long})*(posts.long - #{long})) asc")
+    def search_by_location(lat, long, radius = nil)
+      if radius.nil?
+        Post
+          .where.not(lat: nil)
+          .where.not(long: nil)
+          .order("((posts.lat - #{lat})*(posts.lat - #{lat}) + (posts.long - #{long})*(posts.long - #{long})) asc")
+      else
+        Post
+          .where.not(lat: nil)
+          .where.not(long: nil)
+          .where("SQRT((posts.lat - #{lat})*(posts.lat - #{lat}) + (posts.long - #{long})*(posts.long - #{long})) <= #{radius}")
+          .order(created_at: :desc)
+      end
     end
   end
 
