@@ -38,7 +38,7 @@ module API
         desc "Follow a user"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
-          requires :user_id, type: Integer, desc: 'User id of target user'
+          requires :following_id, type: Integer, desc: 'User id of target user'
         end
         post do
           following = User.find_by_id(params[:user_id])

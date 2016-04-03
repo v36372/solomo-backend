@@ -13,10 +13,10 @@ class User < ActiveRecord::Base
 
   has_many :posts
 
-  has_many :user_followings, class_name: 'UserFollowing', foreign_key: 'user_id'
+  has_many :user_followings, class_name: 'UserFollowing', foreign_key: 'following_id'
   has_many :followings, through: :user_followings, source: :user
 
-  has_many :user_followers, class_name: 'UserFollowing', foreign_key: 'following_id'
+  has_many :user_followers, class_name: 'UserFollowing', foreign_key: 'user_id'
   has_many :followers, through: :user_followers, source: :following
 
   has_many :post_likes
