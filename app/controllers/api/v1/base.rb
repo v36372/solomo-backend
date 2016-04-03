@@ -24,6 +24,7 @@ module API
       mount API::V1::Search
       mount API::V1::Pictures
       mount API::V1::Comments
+      mount API::V1::Notifications
 
       #################################
       # API Documentation

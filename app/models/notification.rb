@@ -6,11 +6,19 @@ class Notification < ActiveRecord::Base
   belongs_to :notifier, class_name: 'User'
 
   scope :unread, -> { where("`read` IS NULL or `read` = ?", false) }
+  scope :unread_prioritized, -> { order(read: :asc) }
 
   after_create :send_to_pusher
 
+  class << self
+    def mark_read
+      update_all(read: true)
+    end
+  end
+
   def pusher_hash
     {
+      id: self.id,
       notification_type: self.notification_type,
       message: NotificationMessage.generate(self),
       read: read,
