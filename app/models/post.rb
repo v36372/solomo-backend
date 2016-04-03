@@ -22,7 +22,7 @@ class Post < ActiveRecord::Base
       Post
         .where.not(lat: nil)
         .where.not(long: nil)
-        .order("SQRT((posts.lat - #{lat})*(posts.lat - #{lat}) + (posts.long - #{long})*(posts.long - #{long})) desc")
+        .order("((posts.lat - #{lat})*(posts.lat - #{lat}) + (posts.long - #{long})*(posts.long - #{long})) asc")
     end
   end
 
