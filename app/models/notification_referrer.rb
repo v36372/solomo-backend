@@ -12,7 +12,7 @@ class NotificationReferrer
         {
           refferer_type: 'User',
           referrer_id: notification.notifiable_id,
-          referrer_thumbnail: (notification.notifiable.avatar.url(:fb_image_thumb) if notification.notifiable.avatar.present?)
+          referrer_thumbnail: (notification.notifiable.user.avatar.url(:fb_image_thumb) if notification.notifiable.user.avatar.present?)
         }
       else
         {}
