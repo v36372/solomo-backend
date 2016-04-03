@@ -95,7 +95,7 @@ module API
           requires :user_token, type: String, desc: 'Generated user token'
           requires :lat, type: Float, desc: 'Keyword to serach'
           requires :long, type: Float, desc: 'Keyword to serach'
-          requires :radius, type: Float, desc: 'Radius of google map'
+          optional :radius, type: Float, desc: 'Radius of google map'
         end
         get :posts_by_location do
           results = Post.search_by_location(params[:lat], params[:long], params[:radius]).limit(20)
