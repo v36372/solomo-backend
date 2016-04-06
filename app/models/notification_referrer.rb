@@ -11,7 +11,7 @@ class NotificationReferrer
       when 'follow'
         {
           refferer_type: 'User',
-          referrer_id: notification.notifiable.post_id,
+          referrer_id: notification.notifiable.user_id,
           referrer_thumbnail: (notification.notifiable.user.avatar.url(:fb_image_thumb) if notification.notifiable.user.avatar.present?)
         }
       else
