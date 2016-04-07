@@ -13,6 +13,7 @@
  *= require ./documentation.scss
  *= require_tree ./api_docs
  *= require_tree ./admin
+ *= require_tree ./static
  *= require_self
  */
  @import "bootstrap-sprockets";

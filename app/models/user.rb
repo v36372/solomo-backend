@@ -36,6 +36,13 @@ class User < ActiveRecord::Base
     # Basic information
     self.first_name ||= auth.info.first_name
     self.last_name ||= auth.info.last_name
+
+    if self.first_name.blank? && self.last_name.blank? && auth.info.name.present?
+      name_splits = auth.info.name.split(' ')
+      self.first_name = name_splits.first
+      self.last_name = name_splits[1..(name_splits.length - 1)].join(' ')
+    end
+
     self.email ||= auth.info.email
     self.uid = auth.uid
     self.provider = "facebook"
@@ -95,6 +102,10 @@ class User < ActiveRecord::Base
   def age
     return nil if birthday.nil?
     Time.current.beginning_of_year.year - birthday.beginning_of_year.year
+  end
+
+  def is_store?
+    true
   end
 
   private

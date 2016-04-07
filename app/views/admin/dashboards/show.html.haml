@@ -47,7 +47,7 @@
                 center: {lat: #{@posts_with_location.first.lat}, lng: #{@posts_with_location.first.long}},
                 zoom: 10
               });
-              var locations = JSON.parse('#{j(@posts_with_location.map {|p| [p.lat, p.long, p.user_name, p.description, post_path(p)]}.to_json)}');
+              var locations = JSON.parse('#{j(@posts_with_location.map {|p| [p.lat, p.long, p.user_name, p.description, admin_post_path(p)]}.to_json)}');
               for (var i = 0; i < locations.length; i++) {
                 var marker = new google.maps.Marker({
                   position: {lat: locations[i][0], lng: locations[i][1]},
@@ -84,7 +84,7 @@
             .panel-body
               - @posts_top_interaction.first(10).each do |post|
                 .post
-                  .pull-left= link_to "##{post.id}", post_path(post)
+                  .pull-left= link_to "##{post.id}", admin_post_path(post)
                   .pull-right
                     .label.label-danger
                       = post.comments.count
@@ -106,7 +106,7 @@
               .top-10.text-center
                 Likes segment
             .col-md-6
-              .post_comment_graph
+              .admin_post_comment_graph
                 %canvas{id: "postCommentGraph", height: "250"}
               .top-10.text-center
                 Comments segment
@@ -129,7 +129,7 @@
               .left
                 - if user.avatar.present?
                   .avatar= image_tag user.avatar.url(:thumb)
-                .name= link_to user.name, user_path(user)
+                .name= link_to user.name, admin_user_path(user)
               .right
                 .label.label-info
                   = user.posts.count
@@ -150,7 +150,7 @@
               .left
                 - if user.avatar.present?
                   .avatar= image_tag user.avatar.url(:thumb)
-                .name= link_to user.name, user_path(user)
+                .name= link_to user.name, admin_user_path(user)
     .col-md-6
       .panel.panel-primary
         .panel-heading
@@ -258,7 +258,7 @@
           label: "Comments above 20"
       }
     ]
-    var width = $(".post_comment_graph").width();
+    var width = $(".admin_post_comment_graph").width();
     var postCommentCanvas = document.getElementById("postCommentGraph");
     var ctx = postCommentCanvas.getContext("2d");
     postCommentCanvas.width = width;

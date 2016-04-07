@@ -38,7 +38,7 @@ class Post < ActiveRecord::Base
     if post_type == 'crawl'
       return nil
     else
-      return user.id
+      return user.try(:id)
     end
   end
 

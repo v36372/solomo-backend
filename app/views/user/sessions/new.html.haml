@@ -1,0 +1,32 @@
+.container
+  .row
+    .col-xs-12.col-sm-6.col-sm-offset-3.col-md-6.col-md-offset-3.col-lg-4.col-lg-offset-4
+      = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :role => 'form'}) do |f|
+        .panel.panel-default
+          .panel-heading Login
+          .panel-body
+            -# Important: Must put Devise's default return path session[:user_return_to] here
+            -# to prevent overide return path in some cases.
+            -# For example: page A -> page B (authenticate_user! fail) -> user/sign_in
+            = link_to user_omniauth_authorize_path(:facebook, origin: session[:user_return_to] || request.referrer), class: "btn btn-block btn-primary" do
+              Login with facebook
+            %p
+              = devise_error_messages!
+              = hidden_field_tag :return_to, params[:return_to] || session[:user_return_to] || request.referrer
+              .form-group
+                = f.label :email
+                = f.email_field :email, :autofocus => true, class: 'form-control'
+              .form-group
+                = f.label :password, "Password"
+                = f.password_field :password, class: 'form-control'
+              .checkbox.text-center{:style => "width:150px"}
+                %label
+                  = f.check_box :remember_me
+                  Remember me
+              .clearfix
+            %p
+              = f.submit 'Login', class: 'btn btn-block signin-btn btn-primary'
+              .register.text-center
+                Have not registered yet?
+                = link_to "Đăng kí ngay", new_user_registration_path(return_to: params[:return_to])
+

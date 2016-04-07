@@ -14,7 +14,7 @@
           .content
             = @post.user_name
             - if @post.user.present?
-              (#{link_to @post.user.email, user_path(@post.user)})
+              (#{link_to @post.user.email, admin_user_path(@post.user)})
         .form-group
           %label Description
           .content
@@ -34,7 +34,7 @@
             = time_ago_in_words(@post.created_at)
             ago
         .form-group
-          = link_to 'Destroy', post_path(@post), method: :delete, class: 'btn btn-danger'
+          = link_to 'Destroy', admin_post_path(@post), method: :delete, class: 'btn btn-danger'
       .clearfix
   .row
     - colclass = 'col-md-12'
@@ -76,8 +76,8 @@
           - else
             %table.table
               - @post.post_likes.order(created_at: :desc).each do |post_like|
-                = render 'post_likes/show', post_like: post_like
-          .new_like= render 'post_likes/new', users: @like_as, post: @post
+                = render 'admin/post_likes/show', post_like: post_like
+          .new_like= render 'admin/post_likes/new', users: @like_as, post: @post
       .panel.panel-default
         .panel-heading
           .pull-left
@@ -94,6 +94,6 @@
           - else
             %table
               - @post.comments.root.in_order.each do |comment|
-                = render 'comments/show', comment: comment
-          .new_comment= render 'comments/new', post: @post
+                = render 'admin/comments/show', comment: comment
+          .new_comment= render 'admin/comments/new', post: @post
     .clearfix

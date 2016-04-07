@@ -17,7 +17,7 @@
             - @posts.each do |post|
               %tr{post_id: post.id}
                 %td{style: 'width: 50px'}
-                  = link_to post_path(post) do
+                  = link_to admin_post_path(post) do
                     \##{post.id}
                 %td{style: 'width: 300px; height: auto;'}
                   = image_tag post.picture.url(:fb_image_thumb), class: 'img-responsive' if post.picture.present?
@@ -25,7 +25,7 @@
                 %td{style: 'width: 300px'}
                   = post.user_name
                   - if post.user.present?
-                    (#{link_to post.user.email, user_path(post.user)})
+                    (#{link_to post.user.email, admin_user_path(post.user)})
                 %th
                   %li #{post.post_likes.count} likes
                   %li #{post.comments.count} comments

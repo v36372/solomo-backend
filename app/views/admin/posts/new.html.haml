@@ -3,6 +3,6 @@
     .panel-heading
       New post
     .panel-body
-      = form_for @post, url: posts_path do |f|
-        = render 'posts/form', f: f
+      = form_for @post, url: admin_posts_path do |f|
+        = render 'admin/posts/form', f: f
   .clearfix

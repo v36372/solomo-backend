@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160403150057) do
+ActiveRecord::Schema.define(version: 20160407153755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -100,6 +100,21 @@ ActiveRecord::Schema.define(version: 20160403150057) do
 
   add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
 
+  create_table "stores", force: :cascade do |t|
+    t.integer "user_id"
+    t.text    "website"
+    t.text    "description"
+    t.text    "address"
+    t.float   "location_lat"
+    t.float   "location_long"
+    t.string  "phone"
+    t.string  "status"
+    t.integer "balance"
+    t.integer "total_balance"
+  end
+
+  add_index "stores", ["user_id"], name: "index_stores_on_user_id", using: :btree
+
   create_table "tags", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -143,6 +158,7 @@ ActiveRecord::Schema.define(version: 20160403150057) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.string   "authentication_token",   limit: 191
+    t.boolean  "is_admin"
   end
 
   add_foreign_key "post_likes", "posts"
@@ -150,5 +166,6 @@ ActiveRecord::Schema.define(version: 20160403150057) do
   add_foreign_key "post_tags", "posts"
   add_foreign_key "post_tags", "tags"
   add_foreign_key "posts", "users"
+  add_foreign_key "stores", "users"
   add_foreign_key "user_followings", "users"
 end
