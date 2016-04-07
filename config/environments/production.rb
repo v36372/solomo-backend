@@ -88,4 +88,9 @@ Rails.application.configure do
     },
     path: "system/:class/:attachment/:id_partition/:style/:filename"
   }
+
+  Twilio.configure do |config|
+    config.account_sid = Rails.application.secrets.twillio_sid
+    config.auth_token = Rails.application.secrets.twillio_token
+  end
 end

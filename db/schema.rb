@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160407153755) do
+ActiveRecord::Schema.define(version: 20160407185632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,16 +101,19 @@ ActiveRecord::Schema.define(version: 20160407153755) do
   add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
 
   create_table "stores", force: :cascade do |t|
-    t.integer "user_id"
-    t.text    "website"
-    t.text    "description"
-    t.text    "address"
-    t.float   "location_lat"
-    t.float   "location_long"
-    t.string  "phone"
-    t.string  "status"
-    t.integer "balance"
-    t.integer "total_balance"
+    t.integer  "user_id"
+    t.text     "website"
+    t.text     "description"
+    t.text     "address"
+    t.float    "location_lat"
+    t.float    "location_long"
+    t.string   "phone"
+    t.string   "status"
+    t.integer  "balance"
+    t.integer  "total_balance"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "verify_code"
   end
 
   add_index "stores", ["user_id"], name: "index_stores_on_user_id", using: :btree

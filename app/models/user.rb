@@ -24,6 +24,8 @@ class User < ActiveRecord::Base
 
   has_many :comments, dependent: :destroy
 
+  has_one :store
+
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\Z/
   validates :first_name, :last_name, presence: true, unless: :api?
 
@@ -105,7 +107,7 @@ class User < ActiveRecord::Base
   end
 
   def is_store?
-    true
+    self.store.present? && self.store.verified?
   end
 
   private

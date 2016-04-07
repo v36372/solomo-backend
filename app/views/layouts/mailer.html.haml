@@ -1,0 +1,33 @@
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %meta{:charset => "UTF-8"}
+      %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0", :name => "viewport"}
+        %title= @subject
+        %meta{:content => "Solomo team", :name => "description"}
+  %body{:bgcolor => "#eeeeee"}
+    %center
+      %table{:align => "left", :bgcolor => "#EEEEEE", :border => "0", :cellpadding => "0", :cellspacing => "0", :style => "font-family:Roboto, Arial, Helvetica, sans-serif; font-size:1em;", :width => "100%"}
+        %tr
+          %td
+            %table.container{:align => "center", :border => "0", :cellpadding => "0", :cellspacing => "0", :width => "600"}
+              %tr
+                %td{:align => "center"}
+                  %table.header{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+                    %tr
+                      %td{:align => "center", :bgcolor => "#FFFFFF", :height => "80", style: 'border-bottom: 1px #ddd solid;'}
+                        %a{:href => "http://solomo-api.herokuapp.com", :target => "_blank", style: 'text-transform: uppercase; color: #aaa; font-style: normal; text-decoration: none;'}
+                          %h2 Solomo
+                  %table.content{:bgcolor => "#FFFFFF", :border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+                    %tr
+                      %td{style: 'padding: 20px;'}
+                        = yield
+                    %tr
+                      %td &nbsp;
+                  %table.footer{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%"}
+                    %tr
+                      %td{style: "padding-top: 10px;"}
+                        %center
+                          %table
+                            %tr
+                              %td{colspan: 3} &copy; Solomo, Inc.

@@ -1,0 +1,6 @@
+%p Thanks for your store registration at Solomo. This is your verify code;
+%center
+  %h3= @store.verify_code.to_s.upcase
+%p
+  Please enter this code into the verify form on
+  %a{href: "http://solomo-api.herokuapp.com/store"} Solomo website
