@@ -1,5 +1,19 @@
+@import 'compass';
+
 #home_header {
-  nav {
-    border-bottom: 1px #ddd solid;
-  }
+  z-index: 1;
+}
+#landing_page {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #444;
+  color: #777;
+  font-size: 80px;
+  z-index: -1;
+  @include display-flex();
+  @include justify-content(center);
+  @include align-items(center);
 }
