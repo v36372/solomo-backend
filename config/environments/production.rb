@@ -89,6 +89,12 @@ Rails.application.configure do
     path: "system/:class/:attachment/:id_partition/:style/:filename"
   }
 
+  config.action_mailer.delivery_method = :mailgun
+  config.action_mailer.mailgun_settings = {
+    api_key: Rails.application.secrets.mailgun_api,
+    domain: Rails.application.secrets.mailgun_domain
+  }
+
   Twilio.configure do |config|
     config.account_sid = Rails.application.secrets.twillio_sid
     config.auth_token = Rails.application.secrets.twillio_token

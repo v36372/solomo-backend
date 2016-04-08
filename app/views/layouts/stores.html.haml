@@ -20,22 +20,22 @@
           %ul.nav.navbar-nav
             - if current_user.is_store?
               %li.dropdown{class: ('active' if params[:controller] == "posts")}
-                %a.dropdown-toggle{"data-toggle" => "dropdown", :href => stores_dashboards_path}
+                %a.dropdown-toggle{:href => stores_dashboards_path}
                   Dashboard
               %li.dropdown
-                %a.dropdown-toggle{"data-toggle" => "dropdown", :href => stores_posts_path}
+                %a.dropdown-toggle{:href => stores_posts_path}
                   Posts
               %li.dropdown
-                %a.dropdown-toggle{"data-toggle" => "dropdown", :href => stores_people_path}
+                %a.dropdown-toggle{:href => stores_people_path}
                   People
               %li.dropdown
-                %a.dropdown-toggle{"data-toggle" => "dropdown", :href => stores_followers_path}
+                %a.dropdown-toggle{:href => stores_followers_path}
                   Followers
               %li.dropdown
-                %a.dropdown-toggle{"data-toggle" => "dropdown", :href => stores_payments_path}
+                %a.dropdown-toggle{:href => stores_payments_path}
                   Payments
               %li.dropdown
-                %a.dropdown-toggle{"data-toggle" => "dropdown", :href => stores_profiles_path}
+                %a.dropdown-toggle{:href => stores_profiles_path}
                   Profile
           = render "layouts/header_user"
     = yield
