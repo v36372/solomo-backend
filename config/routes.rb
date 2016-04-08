@@ -18,8 +18,24 @@ Rails.application.routes.draw do
     get :landing_page
   end
 
-  namespace :store do
-    resource :dashboard
+  namespace :stores do
+    root to: 'dashboards#show'
+    resource :dashboards
+    resource :registrations, only: [:new, :edit, :create, :update] do
+      get :email
+      post :process_email
+      post :resend_email
+      get :phone
+      post :process_phone
+      post :resend_phone
+      post :reset
+      get :finish
+    end
+    resources :payments
+    resources :posts
+    resources :people
+    resources :followers
+    resources :profiles
   end
 
   namespace :admin do

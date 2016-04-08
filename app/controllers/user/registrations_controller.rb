@@ -12,10 +12,6 @@ class User::RegistrationsController < Devise::RegistrationsController
   def create
     build_resource(sign_up_params)
 
-    # Handle extra required fields for the registration
-    required_fields = params[:required_fields].to_s.split(",")
-    resource.registration_required_fields = required_fields
-
     resource.save
     if resource.persisted?
       if resource.active_for_authentication?

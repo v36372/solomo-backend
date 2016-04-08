@@ -1,4 +1,6 @@
 class Store < ActiveRecord::Base
+  attr_accessor :received_verify_code
+
   belongs_to :user
   validates :user_id, presence: true, uniqueness: true
   validates :website, presence: true, unless: :created?
@@ -20,11 +22,11 @@ class Store < ActiveRecord::Base
     end
 
     event :process_email do
-      transitions from: :processing_email, to: :processing_phone
+      transitions from: :processing_email, to: :processing_phone, guard: :match_verify_code?
     end
 
     event :process_phone do
-      transitions from: :processing_phone, to: :verified
+      transitions from: :processing_phone, to: :verified, guard: :match_verify_code?
     end
 
     event :reset do
@@ -46,7 +48,11 @@ class Store < ActiveRecord::Base
     sms_client.messages.create(
       from: Rails.application.secrets.twillio_from,
       to: self.phone,
-      body: "Thanks for your registration to become our official store. Your verify code is: #{self.verify_code.to_s.upcase}"
+      body: "Thanks for your registration to become our official stores. Your verify code is: #{self.verify_code.to_s.upcase}"
     )
+  end
+
+  def match_verify_code?
+    received_verify_code.to_s.upcase == verify_code.to_s.upcase
   end
 end

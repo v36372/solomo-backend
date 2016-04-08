@@ -8,7 +8,7 @@ module API
           detail %Q{
             Use curl command line to test api:
             ```curl -H Content-Type:application/json -X POST -d '{"email":"luan@lixibox.com","password":"dangluan7"}' http://staging.lixibox.com/api/v1/sessions```
-            After login successful the server response an ```access token```. You should store this token for next time to request
+            After login successful the server response an ```access token```. You should stores this token for next time to request
           }
         end
         params do

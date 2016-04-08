@@ -1,0 +1,129 @@
+.top-10
+  .panel.panel-default
+    .panel-heading
+      Basic information
+    .panel-body
+      .form-group
+        .col-md-3
+          = f.label :avatar, 'Your avatar / logo'
+        .col-md-3
+          - if f.object.avatar.present?
+            = image_tag f.object.avatar.url(:thumb)
+          = f.file_field :avatar, class: 'form-control top-10'
+        .clearfix
+      .form-group
+        .col-md-3
+          = f.label :name, 'Store name'
+        .col-md-9
+          = f.text_field :name, class: 'form-control'
+        .clearfix
+      .form-group
+        .col-md-3
+          = f.label :email, 'Primary email'
+        .col-md-9
+          = f.text_field :email, class: 'form-control'
+        .clearfix
+      = f.fields_for :store do |field|
+        .form-group
+          .col-md-3
+            = field.label :phone, 'Phone number'
+          .col-md-9
+            = field.text_field :phone, class: 'form-control'
+          .clearfix
+        .form-group
+          .col-md-3
+            = field.label :website, 'Website'
+          .col-md-9
+            = field.text_field :website, class: 'form-control'
+          .clearfix
+        .form-group
+          .col-md-3
+            = field.label :description, 'Store description'
+          .col-md-9
+            = field.text_area :description, class: 'form-control', rows: 5
+          .clearfix
+.top-10
+  .panel.panel-default
+    .panel-heading
+      Store location
+    .panel-body
+      = f.fields_for :store do |field|
+        .form-group
+          .col-md-3
+            = field.label :address, 'Full Address'
+          .col-md-9
+            = field.text_field :address, class: 'form-control', placeholder: 'Thành phố Hồ Chí Minh'
+            .row.top-6
+              .col-md-6= field.text_field :location_lat, readonly: 'readonly', class: 'form-control'
+              .col-md-6= field.text_field :location_long, readonly: 'readonly', class: 'form-control'
+              .clearfix
+          .clearfix
+        .form-group
+          #map{style: 'width: 100%; height: 425px; background-color: #CCC;'}
+            %script{src:"https://maps.googleapis.com/maps/api/js?key=AIzaSyDSAyIA48rQ8VJtuJ140hblQaU3XCrT6bI&callback=initMap", async: true, defer: true}
+            :javascript
+              function initMap() {
+                var mapDiv = document.getElementById('map');
+                window.storeMap = new google.maps.Map(mapDiv, {
+                  center: {lat: #{field.object.location_lat || 10.815540}, lng: #{field.object.location_long || 106.654502}},
+                  zoom: 15
+                });
+                window.storeMapMakers = [];
+                if (#{field.object.location_lat.present? && field.object.location_long.present?}) {
+                  var marker = new google.maps.Marker({
+                    position: {lat: #{field.object.location_lat || 0}, lng: #{field.object.location_long || 0}},
+                    map: window.storeMap
+                  });
+                  window.storeMapMakers.push(marker);
+                }
+              }
+.top-10
+  .panel.panel-default
+    .panel-body
+      .pull-right
+        = f.submit 'Continue', class: 'btn btn-primary'
+      .clearfix
+
+  -#https://maps.googleapis.com/maps/api/geocode/json?address=227%20nguy%E1%BB%85n%20v%C4%83n%20c%E1%BB%AB%2C%20qu%E1%BA%ADn%205%2C%20TP%20H%E1%BB%93%20Ch%C3%AD%20Minh&key=AIzaSyDSAyIA48rQ8VJtuJ140hblQaU3XCrT6bI
+
+:javascript
+  $(function() {
+    var addressLine = [];
+    var address = $('[name*="address"]');
+    var latInput = $('[name*="location_lat"]');
+    var longInput = $('[name*="location_long"]');
+    address.on('keydown', function() {
+      addressLine.push(1);
+      setTimeout(function() {
+        if (addressLine.length != 0) {
+          addressLine = [];
+          var apiUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDSAyIA48rQ8VJtuJ140hblQaU3XCrT6bI&address=" + encodeURIComponent(address.val());
+          $.get(apiUrl, function(results) {
+            var lat = null;
+            var long = null;
+            if (results && results.results && results.results.length) {
+              var result = results.results[0];
+              if (result.geometry && result.geometry.location) {
+                lat = result.geometry.location.lat;
+                long = result.geometry.location.lng;
+              }
+            }
+            if (lat && long) {
+              latInput.val(lat);
+              longInput.val(long);
+              window.storeMap.setCenter({lat: lat, lng: long});
+              window.storeMapMakers.forEach(function(marker) {
+                marker.setMap(null);
+              });
+              window.storeMapMakers = [];
+              var marker = new google.maps.Marker({
+                position: {lat: lat, lng: long},
+                map: window.storeMap
+              });
+              window.storeMapMakers.push(marker);
+            }
+          });
+        }
+      }, 3000);
+    });
+  });

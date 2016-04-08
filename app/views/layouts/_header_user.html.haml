@@ -11,7 +11,10 @@
               = link_to 'Admin dashboards', admin_dashboards_path
           - if current_user.is_store?
             %li
-              = link_to 'Store dashboards', store_dashboard_path
+              = link_to 'Store dashboards', stores_root_path
+          - else
+            %li
+              = link_to 'Register to become a stores', stores_root_path
           %li.divider
           %li= link_to "Signout", destroy_user_session_path, method: :delete
       - else

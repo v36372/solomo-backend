@@ -1,0 +1,23 @@
+.col-md-6.col-md-offset-3
+  .progress.progress-striped.actived
+    .progress-bar.progress-bar-primary{role: "progressbar", "aria-valuenow" => "40", "aria-valuemin" => "0", "aria-valuemax" => "100", style: 'width: 40%'}
+  #store_registration.top-10
+    = form_for current_user.store, url: process_email_stores_registrations_path, method: :post do |f|
+      .panel.panel-default
+        .panel-heading
+          Email verify
+        .panel-body
+          %p
+            We have just send you an email which contains the verify code to your email address at
+            %strong= current_user.email
+            \. Please check your emails and fill the code into the form below. If you don't receive any email. Please
+            = link_to 'click here', resend_email_stores_registrations_path, method: :post, data: {confirm: 'Are you sure?'}
+            to re-send the email.
+          .form-group
+            = f.text_field :received_verify_code, class: 'form-control'
+        .panel-footer
+          .pull-left
+            = link_to 'Change information', reset_stores_registrations_path, method: :post, class: 'btn btn-default', data: {confirm: 'Are you sure?'}
+          .pull-right
+            = f.submit 'Continue', class: 'btn btn-primary'
+          .clearfix

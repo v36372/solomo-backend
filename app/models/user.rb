@@ -24,7 +24,8 @@ class User < ActiveRecord::Base
 
   has_many :comments, dependent: :destroy
 
-  has_one :store
+  has_one :store, dependent: :destroy
+  accepts_nested_attributes_for :store
 
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\Z/
   validates :first_name, :last_name, presence: true, unless: :api?
@@ -66,6 +67,12 @@ class User < ActiveRecord::Base
 
   def name
     [last_name, first_name].join(" ")
+  end
+
+  def name=(other_name)
+    name_splits = other_name.split(' ')
+    self.last_name = name_splits.first
+    self.first_name = name_splits[1..(name_splits.length - 1)].join(' ')
   end
 
   def generate_authentication_token

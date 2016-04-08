@@ -8,7 +8,7 @@ module API
           detail %Q{
             Use curl command line to test api:
             ```curl -H Content-Type:application/json -X POST -d '{"facebook_token":"xxxxxxxxxxxx"}' http://staging.lixibox.com/api/v1/omniauth```
-            After authorize successful the server response an ```access token```. You should store this token for next time to request
+            After authorize successful the server response an ```access token```. You should stores this token for next time to request
           }
         end
         params do

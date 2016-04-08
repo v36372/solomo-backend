@@ -17,3 +17,13 @@
   @include justify-content(center);
   @include align-items(center);
 }
+
+.floating-alert {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  height: auto;
+  z-index: 1000;
+  color: #fff;
+}

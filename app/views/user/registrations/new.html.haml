@@ -1,0 +1,49 @@
+.container.fix_width#registration_form
+  .row
+    .col-xs-12.col-sm-6.col-sm-offset-3.col-md-6.col-md-offset-3.col-lg-4.col-lg-offset-4
+      = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => 'form'}) do |f|
+        .panel.panel-default
+          .panel.panel-heading
+            Tạo tài khoản Lixibox
+          .panel-body
+            - unless session["devise.facebook_user"].present?
+              %p
+                = link_to user_omniauth_authorize_path(:facebook), class: "btn btn-block facebook-btn btn-primary" do
+                  Use facebook account
+            - else
+              .connected
+                .facebook_info
+                  = image_tag "https://graph.facebook.com/#{session["devise.facebook_user"]['uid']}/picture?type=large"
+                  #{session["devise.facebook_user"]['last_name']} #{session["devise.facebook_user"]['first_name']}
+                Linked with facebook account successfully. Please continue to fill below informations
+
+            .top-20
+              = devise_error_messages!
+              .form-group
+                = f.label :last_name, "First name"
+                = f.text_field :last_name, :autofocus => true, class: 'form-control'
+              .form-group
+                = f.label :first_name, "Last name"
+                = f.text_field :first_name, :autofocus => true, class: 'form-control'
+              .form-group
+                = f.label :email
+                = f.email_field :email, class: 'form-control'
+              .form-group
+                = f.label :password, "Password"
+                = f.password_field :password, class: 'form-control'
+              .form-group
+                = f.label :password_confirmation, "Password confirmation"
+                = f.password_field :password_confirmation, class: 'form-control'
+              .form-group
+                - if f.object.uid.present?
+                  = f.hidden_field :uid
+                  = f.hidden_field :avatar_image
+                  = f.hidden_field :provider
+                  = f.hidden_field :facebook_expires_at
+                  = f.hidden_field :facebook_token
+
+                = hidden_field_tag :return_to, params[:return_to] || session[:user_return_to] || request.referrer
+              = f.submit 'Register', :class => 'btn btn-block signup-btn btn-primary'
+              %p.login.text-center
+                Have an account?
+                = link_to "Login", new_user_session_path(return_to: params[:return_to])
