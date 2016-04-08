@@ -100,7 +100,8 @@ class User < ActiveRecord::Base
       name: name,
       emai: email,
       birthday: processed_birthday,
-      avatar: processed_avatar
+      avatar: processed_avatar,
+      is_store: self.is_store?
     }
   end
 

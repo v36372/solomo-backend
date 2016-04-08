@@ -95,7 +95,8 @@ class Post < ActiveRecord::Base
         id: user_id,
         name: user_name,
         email: user_email,
-        avatar_url: user_avatar_url
+        avatar_url: user_avatar_url,
+        is_store: ((user.present? && user.is_store?) ? true : false)
       },
       likes: {
         count: post_likes.count,
