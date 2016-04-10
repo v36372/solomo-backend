@@ -21,7 +21,6 @@ module API
       mount API::V1::Tags
       mount API::V1::Followers
       mount API::V1::Followings
-      mount API::V1::Feeds
       mount API::V1::Search
       mount API::V1::Pictures
       mount API::V1::Comments
