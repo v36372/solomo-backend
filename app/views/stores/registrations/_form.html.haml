@@ -19,14 +19,14 @@
         .clearfix
       .form-group
         .col-md-3
-          = f.label :email, 'Primary email'
+          = f.label :email, 'Store email'
         .col-md-9
           = f.text_field :email, class: 'form-control'
         .clearfix
       = f.fields_for :store do |field|
         .form-group
           .col-md-3
-            = field.label :phone, 'Phone number'
+            = field.label :phone, 'Store phone number'
           .col-md-9
             = field.text_field :phone, class: 'form-control'
           .clearfix
