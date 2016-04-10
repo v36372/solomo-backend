@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160410053325) do
+ActiveRecord::Schema.define(version: 20160410075258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -125,6 +125,18 @@ ActiveRecord::Schema.define(version: 20160410053325) do
     t.datetime "updated_at"
   end
 
+  create_table "user_feeds", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "post_id"
+    t.boolean  "seen"
+    t.integer  "related_score"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_feeds", ["post_id"], name: "index_user_feeds_on_post_id", using: :btree
+  add_index "user_feeds", ["user_id"], name: "index_user_feeds_on_user_id", using: :btree
+
   create_table "user_followings", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "following_id"
@@ -171,5 +183,7 @@ ActiveRecord::Schema.define(version: 20160410053325) do
   add_foreign_key "post_tags", "tags"
   add_foreign_key "posts", "users"
   add_foreign_key "stores", "users"
+  add_foreign_key "user_feeds", "posts"
+  add_foreign_key "user_feeds", "users"
   add_foreign_key "user_followings", "users"
 end

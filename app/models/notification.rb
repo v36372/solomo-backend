@@ -1,5 +1,5 @@
 class Notification < ActiveRecord::Base
-  enum notification_type: [:like, :comment, :follow]
+  enum notification_type: [:like, :comment, :follow, :feed]
 
   belongs_to :notifiable, polymorphic: true
   belongs_to :receiver, class_name: 'User'

@@ -1,6 +1,6 @@
 class PostLike < ActiveRecord::Base
   belongs_to :user
-  belongs_to :post
+  belongs_to :post, touch: true
   after_create :send_notification
 
   def send_notification

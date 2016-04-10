@@ -31,6 +31,16 @@ class NotificationMessage
             </span>
             vừa theo dõi bạn
         EOF
+      when 'feed'
+        <<-EOF
+          <span class='notifier'>
+            #{notification.notifier.name}
+          </span>
+          vừa đăng bài post mới
+          <span class='target'>
+            "#{notification.notifiable.post.description.split(' ').first(7).join(' ')}..."
+          </span>
+        EOF
       end
     end
   end

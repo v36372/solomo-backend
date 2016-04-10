@@ -10,6 +10,10 @@ class Post < ActiveRecord::Base
 
   has_many :comments, dependent: :destroy
 
+  after_update :push_post_update
+  after_touch :push_post_interaction
+  after_create :push_post_create
+
   has_attached_file :picture, styles: {
     fb_image: "1200x630#",
     fb_image_thumb: "600x315#",
@@ -112,6 +116,18 @@ class Post < ActiveRecord::Base
         comments: comments.root.in_order.map(&:to_api_json)
       }
     }
+  end
+
+  def push_post_interaction
+    UserFeedGenerator.push_post(self, :interaction)
+  end
+
+  def push_post_create
+    UserFeedGenerator.push_post(self, :create)
+  end
+
+  def push_post_update
+    UserFeedGenerator.push_post(self, :update)
   end
 
 end

@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   has_many :liked_posts, class_name: 'Post', through: :post_likes, source: :post
 
   has_many :comments, dependent: :destroy
+  has_many :user_feeds
 
   has_one :store, dependent: :destroy
   accepts_nested_attributes_for :store
@@ -119,6 +120,14 @@ class User < ActiveRecord::Base
 
   def is_store?
     self.store.present? && self.store.verified?
+  end
+
+  def is_following?(other_user)
+    UserFollowing.where(user_id: self.id, following_id: other_user.id).exists?
+  end
+
+  def followed_by?(other_user)
+    UserFollowing.where(user_id: other_user.id, following_id: self.id).exists?
   end
 
   private
