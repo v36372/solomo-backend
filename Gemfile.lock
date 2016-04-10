@@ -163,6 +163,8 @@ GEM
       rack-oauth2 (>= 0.14.4)
       tzinfo
     ffi (1.9.10)
+    font-awesome-rails (4.5.0.1)
+      railties (>= 3.2, < 5.1)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     grape (0.14.0)
@@ -480,6 +482,7 @@ DEPENDENCIES
   devise
   devise-async
   fb_graph
+  font-awesome-rails
   grape
   grape-active_model_serializers
   grape-route-helpers

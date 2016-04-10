@@ -43,4 +43,7 @@ Rails.application.configure do
     config.account_sid = Rails.application.secrets.twillio_sid
     config.auth_token = Rails.application.secrets.twillio_token
   end
+
+  config.action_controller.asset_host = 'localhost:3000'
+  config.action_mailer.default_url_options = { :host => "localhost:3000" }
 end

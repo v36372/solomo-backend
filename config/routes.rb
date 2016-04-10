@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   namespace :stores do
     root to: 'dashboards#show'
     resource :dashboards
-    resource :registrations, only: [:new, :edit, :create, :update] do
+    resource :registrations, only: [:show, :new, :edit, :create, :update] do
       get :email
       post :process_email
       post :resend_email
@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       post :process_phone
       post :resend_phone
       post :reset
+      get :staff
       get :finish
     end
     resources :payments
@@ -49,6 +50,18 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: [:index, :show, :edit] do
+    end
+
+    resources :stores do
+      member do
+        get :map
+        post :next_status
+        get :reject
+        post :process_reject
+      end
+      collection do
+        get :processing
+      end
     end
   end
 end

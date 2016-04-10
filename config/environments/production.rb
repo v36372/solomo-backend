@@ -88,6 +88,8 @@ Rails.application.configure do
     },
     path: "system/:class/:attachment/:id_partition/:style/:filename"
   }
+  config.action_controller.asset_host = 's3-ap-southeast-1.amazonaws.com'
+  config.action_mailer.default_url_options = { :host => "solomo-api.herokuapp.com" }
 
   config.action_mailer.delivery_method = :mailgun
   config.action_mailer.mailgun_settings = {

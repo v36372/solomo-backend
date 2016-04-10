@@ -32,6 +32,9 @@ class User < ActiveRecord::Base
 
   before_save :ensure_authentication_token
 
+  scope :verified_stores, -> { joins(:store).where(stores: {status: 'verified'}) }
+  scope :processing_stores, -> { joins(:store).where.not(stores: {status: 'verified'}) }
+
   ##############################################################
   # REGISTRATION
   ##############################################################

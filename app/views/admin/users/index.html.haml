@@ -26,5 +26,7 @@
                 %td= user.phone
                 %td= link_to(user.uid, "https://facebook.com/#{user.uid}") if user.uid.present?
                 %td= user.authentication_token
+        .top-20.text-center
+          = paginate @users
       - else
         .text-center No users found

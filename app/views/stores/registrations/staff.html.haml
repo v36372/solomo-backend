@@ -1,0 +1,17 @@
+.col-md-6.col-md-offset-3
+  = render 'stores/registrations/process', step: 3
+  #store_registration.top-10
+    .panel.panel-default
+      .panel-heading
+        Staff verify
+      .panel-body
+        %p
+          This this step, our staffs will manually verify your registration based on your provided information. Please be patient and wait for our verifiation. We will contact your via email or phone if neccessary.
+        %p
+          After the process finish, we will announce you via email and phone.
+        %p
+          Thanks for joining Solomo Network.
+      .panel-footer
+        .pull-left
+          = link_to 'Change information', reset_stores_registrations_path, method: :post, class: 'btn btn-default', data: {confirm: 'Are you sure?'}
+        .clearfix

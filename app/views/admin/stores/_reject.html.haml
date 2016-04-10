@@ -1,0 +1,16 @@
+.modal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close(type="button" class="close" data-dismiss="modal" aria-label="Close")
+          %span(aria-hidden="true") &times
+        %h4.modal-title
+          Reject store
+      = form_tag process_reject_admin_store_path(@user) do
+        .modal-body
+          .form-group
+            %label Reject reason
+            .form-content
+              = text_area_tag :feedback_content, '', class: 'form-control'
+        .modal-footer
+          = submit_tag 'Submit', class: 'btn btn-primary'

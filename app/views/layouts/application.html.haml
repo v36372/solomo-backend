@@ -5,10 +5,11 @@
     = stylesheet_link_tag    'application', media: 'all'
     = javascript_include_tag 'application'
     = csrf_meta_tags
+    %script{src:"https://maps.googleapis.com/maps/api/js?key=AIzaSyDSAyIA48rQ8VJtuJ140hblQaU3XCrT6bI", async: true, defer: true}
   %body
     = render "layouts/notices"
-    #home_header
-      %nav.navbar-inverse#heading.navbar(role="navigation")
+    %header
+      %nav#heading.navbar(role="navigation")
         .container-fluid
           .navbar-header
             %button.navbar-toggle{"data-target" => "#bs-example-navbar-collapse-5", "data-toggle" => "collapse", :type => "button"}

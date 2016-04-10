@@ -1,6 +1,15 @@
 .col-md-6.col-md-offset-3
-  .progress.progress-striped.actived
-    .progress-bar.progress-bar-primary{role: "progressbar", "aria-valuenow" => "20", "aria-valuemin" => "0", "aria-valuemax" => "100", style: 'width: 100%'}
+  = render 'stores/registrations/process', step: 0
+  - if current_user.store.feedback_content.present?
+    .panel.panel-warning
+      .panel-heading
+        We have some feedback for you
+      .panel-body
+        = current_user.store.feedback_content
+  - else
+    .panel.panel-default
+      .panel-body
+        Please fill in your true information about your store. Our staff will verify based on your information including email confirmation, sms confmration etc.
   #store_registration
     = form_for current_user, url: stores_registrations_path, method: :patch do |f|
       = render "stores/registrations/form", f: f

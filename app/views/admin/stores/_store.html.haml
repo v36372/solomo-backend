@@ -1,0 +1,51 @@
+%tr{user_id: user.id}
+  %td
+    = image_tag user.avatar.url(:thumb) if user.avatar.present?
+  %td= user.name
+  %td= user.email
+  %td= user.store.phone
+  %td
+    .form-group
+      %label
+        Address
+      .form-content
+        = user.store.address
+        = link_to map_admin_store_path(user), remote: true do
+          = fa_icon 'map'
+    .form-group
+      %label
+        Website
+      .form-content
+        = user.store.website
+    .form-group
+      %label
+        Description
+      .form-content
+        = user.store.description
+  - unless user.is_store?
+    %td
+      %h4{style: 'margin: 5px 0px 0px 0px; padding: 0px;'}
+        - if user.store.created?
+          .label.label-default{style: 'padding: 8px 15px;'} Filling information
+        - elsif user.store.processing_phone?
+          .label.label-warning{style: 'padding: 8px 15px;'} Verifying phone
+        - elsif user.store.processing_email?
+          .label.label-warning{style: 'padding: 8px 15px;'} Verifying email
+        - elsif user.store.processing_staff?
+          .label.label-info{style: 'padding: 8px 15px;'} Waiting for your approval
+    %td
+      - if user.store.processing_phone?
+        = link_to next_status_admin_store_path(user), method: :post, class: 'btn-block btn btn-primary', data: {confirm: 'Are you sure?'} do
+          = fa_icon 'chevron-right'
+          Verify phone
+      - elsif user.store.processing_email?
+        = link_to next_status_admin_store_path(user), method: :post, class: 'btn-block btn btn-primary', data: {confirm: 'Are you sure?'} do
+          = fa_icon 'chevron-right'
+          Verify email
+      - elsif user.store.processing_staff?
+        = link_to next_status_admin_store_path(user), method: :post, class: 'btn-block btn btn-primary', data: {confirm: 'Are you sure?'} do
+          = fa_icon 'chevron-right'
+          Approve
+      = link_to reject_admin_store_path(user), remote: true, method: :get, class: 'btn-block btn btn-danger top-6' do
+        = fa_icon 'remove'
+        Reject

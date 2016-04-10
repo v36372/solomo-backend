@@ -1,0 +1,13 @@
+%p
+  Hi #{@store.user.name},
+%p
+  We found some problems in your store registration.
+  - if @store.feedback_content.present?
+    Our staff have some feedbacks for you:
+- if @store.feedback_content.present?
+  %p= @store.feedback_content
+%p
+  Please edit all information at
+  %a{href: stores_registrations_url} Solomo website
+%p
+  Sorry for this inconvience and thanks for joining the Solomo Network

@@ -1,7 +1,10 @@
 module Admin
   class UsersController < AdminController
     def index
-      @users = User.all
+      @page = params[:page] || 1
+      @per_page = 20
+
+      @users = User.all.page(@page).per(@per_page)
     end
   end
 end

@@ -12,10 +12,11 @@ class Store < ActiveRecord::Base
 
   include AASM
   aasm column: :status, whiny_transitions: false do
-    state :created, initial: true
+    state :created, initial: true, after_exit: [:remove_feedback_content]
     state :processing_email, after_enter: [:generate_verify_code, :send_verify_email]
     state :processing_phone, after_enter: [:generate_verify_code, :send_verify_sms]
-    state :verified
+    state :processing_staff
+    state :verified, after_enter: [:send_congratulation_email, :send_congratulation_sms]
 
     event :process_information do
       transitions from: :created, to: :processing_email
@@ -26,11 +27,15 @@ class Store < ActiveRecord::Base
     end
 
     event :process_phone do
-      transitions from: :processing_phone, to: :verified, guard: :match_verify_code?
+      transitions from: :processing_phone, to: :processing_staff, guard: :match_verify_code?
+    end
+
+    event :process_staff do
+      transitions from: :processing_staff, to: :verified
     end
 
     event :reset do
-      transitions from: [:processing_email, :processing_phone, :verified], to: :created
+      transitions from: [:processing_email, :processing_phone, :processing_staff, :verified], to: :created, after: [:send_feedback_email]
     end
   end
 
@@ -54,5 +59,29 @@ class Store < ActiveRecord::Base
 
   def match_verify_code?
     received_verify_code.to_s.upcase == verify_code.to_s.upcase
+  end
+
+  def send_feedback_email
+    if self.feedback_content.present?
+      StoreMailer.send_feedback_email(self.id).deliver_now
+    end
+  end
+
+  def remove_feedback_content
+    self.feedback_content = nil
+    self.save
+  end
+
+  def send_congratulation_email
+    StoreMailer.send_congratulation_email(self.id).deliver_now
+  end
+
+  def send_congratulation_sms
+    sms_client = Twilio::REST::Client.new
+    sms_client.messages.create(
+      from: Rails.application.secrets.twillio_from,
+      to: self.phone,
+      body: "Your store registration has been approved. Please find out more at solomo website."
+    )
   end
 end

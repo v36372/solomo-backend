@@ -1,0 +1,23 @@
+.container-fluid
+  .panel.panel-default
+    .panel-heading
+      List of processing stores
+    .panel-body
+      - if @users.present?
+        %table.table
+          %thead
+            %tr
+              %th Logo
+              %th{width: '200px;'} Store name
+              %th Email
+              %th Phone
+              %th Detail information
+              %th Status
+              %th Action
+          %tbody
+            - @users.each do |user|
+              = render 'admin/stores/store', user: user
+        .text-center.top-20
+          = paginate @users
+      - else
+        .text-center No processing stores found

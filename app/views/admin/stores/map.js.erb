@@ -1,0 +1,18 @@
+setTimeout(function() {
+  var popup = $('<%= j(render('admin/stores/map')) %>');
+  $('body').append(popup);
+  var mapCavas = popup.find('.map-canvas');
+
+  map = new google.maps.Map(mapCavas[0], {
+    center: {lat: <%= @user.store.location_lat || 10.815540 %>, lng: <%= @user.store.location_long || 106.654502 %>},
+    zoom: 15
+  });
+
+  <% if @user.store.location_lat.present? && @user.store.location_long.present? %>
+    var marker = new google.maps.Marker({
+      position: {lat: <%= @user.store.location_lat || 0 %>, lng: <%= @user.store.location_long || 0 %>},
+      map: map
+    });
+  <% end %>
+  popup.modal('show');
+}, 250);

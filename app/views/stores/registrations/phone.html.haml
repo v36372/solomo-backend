@@ -1,6 +1,5 @@
 .col-md-6.col-md-offset-3
-  .progress.progress-striped.actived
-    .progress-bar.progress-bar-primary{role: "progressbar", "aria-valuenow" => "80", "aria-valuemin" => "0", "aria-valuemax" => "100", style: 'width: 80%'}
+  = render 'stores/registrations/process', step: 2
   #store_registration.top-10
     = form_for current_user.store, url: process_phone_stores_registrations_path, method: :post do |f|
       .panel.panel-default

@@ -2,6 +2,9 @@ module Stores
   class RegistrationsController < StoreController
     before_action :authenticate_store!, except: [:new, :create]
 
+    def show
+    end
+
     def new
       current_user.build_store
     end
@@ -67,17 +70,23 @@ module Stores
       current_user.store.assign_attributes(store_params)
       if current_user.store.process_phone!
         flash[:notice] = 'Verify phone successfully'
-        redirect_to finish_stores_registrations_path
+        redirect_to staff_stores_registrations_path
       else
         flash[:error] = 'Fail to verify phone'
         redirect_to :back
       end
+    rescue
+      flash[:error] = 'Fail to verify phone. Perhaps you enter wrong phone number. Please try again'
+      redirect_to :back
     end
 
     def resend_phone
       current_user.store.generate_verify_code
       current_user.store.send_verify_sms
       redirect_to :back
+    end
+
+    def staff
     end
 
     def reset

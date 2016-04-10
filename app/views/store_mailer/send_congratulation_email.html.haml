@@ -1,0 +1,6 @@
+%center
+  = image_tag @store.user.avatar.url(:thumb) if @store.user.avatar.present?
+  %h3 CONGRATULATION
+%p
+  You have finished reigstered to be a store at Solomo network. Please see more information at
+  %a{href: finish_stores_registrations_url} Solomo website

@@ -1,0 +1,16 @@
+- steps = [15, 37, 62, 85, 100]
+.progress.progress-striped.actived
+  .progress-bar.progress-bar-primary{role: "progressbar", "aria-valuenow" => "20", "aria-valuemin" => "0", "aria-valuemax" => "100", style: "width: #{steps[step]}%;"}
+.process-label-panel.top-6
+  .process-label{style: "left: #{steps[0]}%;", class: ('active' if step == 0)}
+    = fa_icon 'user'
+    Information
+  .process-label{style: "left: #{steps[1]}%;", class: ('active' if step == 1)}
+    = fa_icon 'envelope-o'
+    Email confirm
+  .process-label{style: "left: #{steps[2]}%;", class: ('active' if step == 2)}
+    = fa_icon 'mobile-phone'
+    Phone confirm
+  .process-label{style: "left: #{steps[3]}%;", class: ('active' if step == 3)}
+    = fa_icon 'check'
+    Staff verify
