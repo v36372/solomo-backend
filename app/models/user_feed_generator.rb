@@ -23,6 +23,9 @@ class UserFeedGenerator
       end
       # Factor 3: boost post
 
+      # Factor 4: tags
+      score += UserTag.where(tag_id: post.post_tags.pluck(:tag_id)).count('distinct tag_id')
+
       score
     end
 
@@ -34,9 +37,11 @@ class UserFeedGenerator
         related_user_ids += post.user.followers.pluck(:id)
       end
       # Factor 2: Users that used to interact with the tags the post contains
+      tag_ids = post.post_tags.pluck(:tag_id)
+      related_user_ids += UserTag.where(tag_id: tag_ids).pluck(:user_id)
       # Factor 3: Users that match the post boost meta
 
-      User.where(id: related_user_ids)
+      User.where(id: related_user_ids.uniq.compact)
     end
 
     def push_post(post, updating_method = nil)

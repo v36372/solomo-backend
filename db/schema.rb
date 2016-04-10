@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160410075258) do
+ActiveRecord::Schema.define(version: 20160410091858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20160410075258) do
     t.integer  "tag_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_auto",    default: false
   end
 
   add_index "post_tags", ["post_id"], name: "index_post_tags_on_post_id", using: :btree
@@ -146,6 +147,17 @@ ActiveRecord::Schema.define(version: 20160410075258) do
 
   add_index "user_followings", ["user_id"], name: "index_user_followings_on_user_id", using: :btree
 
+  create_table "user_tags", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "tag_id"
+    t.integer  "score",      default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_tags", ["tag_id"], name: "index_user_tags_on_tag_id", using: :btree
+  add_index "user_tags", ["user_id"], name: "index_user_tags_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 191
     t.string   "encrypted_password",     limit: 191
@@ -186,4 +198,6 @@ ActiveRecord::Schema.define(version: 20160410075258) do
   add_foreign_key "user_feeds", "posts"
   add_foreign_key "user_feeds", "users"
   add_foreign_key "user_followings", "users"
+  add_foreign_key "user_tags", "tags"
+  add_foreign_key "user_tags", "users"
 end

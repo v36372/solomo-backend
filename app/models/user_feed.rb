@@ -10,6 +10,7 @@ class UserFeed < ActiveRecord::Base
           .order(seen: :asc)
           .order(related_score: :desc)
           .order(updated_at: :desc)
+          .order(id: :desc)
     end
   end
 

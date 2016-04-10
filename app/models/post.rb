@@ -10,9 +10,11 @@ class Post < ActiveRecord::Base
 
   has_many :comments, dependent: :destroy
 
+  before_create :generate_auto_post_tags
+
   after_update :push_post_update
   after_touch :push_post_interaction
-  after_create :push_post_create
+  after_create :push_post_create, :push_to_user_tags
 
   has_attached_file :picture, styles: {
     fb_image: "1200x630#",
@@ -130,4 +132,25 @@ class Post < ActiveRecord::Base
     UserFeedGenerator.push_post(self, :update)
   end
 
+  def extract_terms
+    description.to_slug.normalize.transliterate(:vietnamese)
+               .to_s.split('-').select {|term| term =~ /[a-zA-Z]+/i}
+  end
+
+  def generate_auto_post_tags
+    self.extract_terms.each do |term|
+      tag = Tag.find_by_name term
+      next if tag.blank?
+      self.post_tags << PostTag.new(
+        post: self,
+        tag: tag,
+        is_auto: true
+      )
+    end
+  end
+
+  def push_to_user_tags
+    return if self.user.blank?
+    UserTag.generate_user_tags(self, self.user, 5)
+  end
 end

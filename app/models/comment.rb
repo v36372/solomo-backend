@@ -13,7 +13,7 @@ class Comment < ActiveRecord::Base
   scope :root, -> { where(parent_id: nil) }
   scope :in_order, -> { order(created_at: :desc) }
 
-  after_create :send_notification
+  after_create :send_notification, :push_to_user_tags
 
   def comment_tree_depth
     if self.parent_comment.present? && self.parent_comment.parent_id.present?
@@ -43,5 +43,10 @@ class Comment < ActiveRecord::Base
       notification_type: Notification.notification_types[:comment],
       notifiable: self
     )
+  end
+
+  def push_to_user_tags
+    return if self.user.blank?
+    UserTag.generate_user_tags(self.post, self.user, 2)
   end
 end
