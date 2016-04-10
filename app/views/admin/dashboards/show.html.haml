@@ -39,32 +39,6 @@
           Post distributing map
         .panel-body
           #map{style: 'width: 100%; height: 600px; background-color: #CCC;'}
-          %script{src:"https://maps.googleapis.com/maps/api/js?key=AIzaSyDSAyIA48rQ8VJtuJ140hblQaU3XCrT6bI&callback=initMap", async: true, defer: true}
-          :javascript
-            function initMap() {
-              var mapDiv = document.getElementById('map');
-              var map = new google.maps.Map(mapDiv, {
-                center: {lat: #{@posts_with_location.first.lat}, lng: #{@posts_with_location.first.long}},
-                zoom: 10
-              });
-              var locations = JSON.parse('#{j(@posts_with_location.map {|p| [p.lat, p.long, p.user_name, p.description, admin_post_path(p)]}.to_json)}');
-              for (var i = 0; i < locations.length; i++) {
-                var marker = new google.maps.Marker({
-                  position: {lat: locations[i][0], lng: locations[i][1]},
-                  map: map,
-                  index: i
-                });
-                locations[i][5] = marker;
-                var infowindow = new google.maps.InfoWindow({
-                  content: '<a target="_blank" href="' + locations[i][4] + '">Open post</a></p></p>'
-                });
-                locations[i][6] = infowindow;
-                marker.addListener('click', function(event) {
-                  locations[this.index][6].open(map, locations[this.index][5]);
-                  event.preventDefault();
-                });
-              }
-            }
     .col-md-6
       .row
         .col-md-6
@@ -315,4 +289,27 @@
     var ctx = userActiveCanvse.getContext("2d");
     userActiveCanvse.width = width;
     var userActiveGraph = new Chart(ctx).Doughnut(userActiveGraph);
+
+    var mapDiv = document.getElementById('map');
+    var map = new google.maps.Map(mapDiv, {
+      center: {lat: #{@posts_with_location.first.lat}, lng: #{@posts_with_location.first.long}},
+      zoom: 10
+    });
+    var locations = JSON.parse('#{j(@posts_with_location.map {|p| [p.lat, p.long, p.user_name, p.description, admin_post_path(p)]}.to_json)}');
+    for (var i = 0; i < locations.length; i++) {
+      var marker = new google.maps.Marker({
+        position: {lat: locations[i][0], lng: locations[i][1]},
+        map: map,
+        index: i
+      });
+      locations[i][5] = marker;
+      var infowindow = new google.maps.InfoWindow({
+        content: '<a target="_blank" href="' + locations[i][4] + '">Open post</a></p></p>'
+      });
+      locations[i][6] = infowindow;
+      marker.addListener('click', function(event) {
+        locations[this.index][6].open(map, locations[this.index][5]);
+        event.preventDefault();
+      });
+    }
   });
