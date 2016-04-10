@@ -25,7 +25,7 @@ module API
             @posts = @posts.page(page).per(per_page)
           end
           posts = @posts.map &:to_api_json
-          return {
+          {
             posts: posts,
             pagination: {
               current_page: page,

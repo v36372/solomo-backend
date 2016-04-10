@@ -16,6 +16,7 @@ module API
       mount API::V1::Account
       mount API::V1::Tags
       mount API::V1::Posts
+      mount API::V1::Feeds
       mount API::V1::PostLikes
       mount API::V1::Tags
       mount API::V1::Followers
