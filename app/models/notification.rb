@@ -8,6 +8,11 @@ class Notification < ActiveRecord::Base
   scope :unread, -> { where("`read` IS NULL or `read` = ?", false) }
   scope :unread_prioritized, -> { order(read: :asc) }
 
+  validates :notifiable, presence: true
+  validates :receiver, presence: true
+  validates :notifier, presence: true
+
+  before_create :render_hash
   after_create :send_to_pusher
 
   class << self
@@ -16,24 +21,32 @@ class Notification < ActiveRecord::Base
     end
   end
 
-  def pusher_hash
-    {
-      id: self.id,
-      notification_type: self.notification_type,
-      message: NotificationMessage.generate(self),
-      read: read,
-      notifier: {
-        id: notifier.id,
-        name: notifier.name,
-        avatar: (notifier.avatar.url(:thumb) if notifier.avatar.present?)
-      },
-      notifiable: notifiable.try(:attributes),
-      referrer: NotificationReferrer.generate(self),
-      created_at: self.created_at
-    }
+  def pusher_hash(cache = true)
+    if rendered_hash.present? && cache
+      rendered_hash
+    else
+      {
+        id: self.id,
+        notification_type: self.notification_type,
+        message: NotificationMessage.generate(self),
+        read: read,
+        notifier: {
+          id: notifier.id,
+          name: notifier.name,
+          avatar: (notifier.avatar.url(:thumb) if notifier.avatar.present?)
+        },
+        notifiable: notifiable.try(:attributes),
+        referrer: NotificationReferrer.generate(self),
+        created_at: self.created_at
+      }
+    end
+  end
+
+  def render_hash
+    self.rendered_hash = pusher_hash(false)
   end
 
   def send_to_pusher
-    Pusher.trigger("notification_user_#{receiver_id}", "new_notification", pusher_hash)
+    Pusher.trigger("notification_user_#{receiver_id}", "new_notification", rendered_hash)
   end
 end

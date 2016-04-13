@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160410091858) do
+ActiveRecord::Schema.define(version: 20160413005932) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 20160410091858) do
     t.integer  "receiver_id"
     t.datetime "updated_at"
     t.datetime "created_at"
+    t.text     "rendered_hash"
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
