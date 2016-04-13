@@ -45,7 +45,7 @@ class Notification < ActiveRecord::Base
   end
 
   def render_hash
-    self.rendered_hash = pusher_hash(false)
+    self.update(rendered_hash: pusher_hash(false))
   end
 
   def send_to_pusher
