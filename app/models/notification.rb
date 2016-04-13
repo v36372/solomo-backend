@@ -27,7 +27,7 @@ class Notification < ActiveRecord::Base
         name: notifier.name,
         avatar: (notifier.avatar.url(:thumb) if notifier.avatar.present?)
       },
-      notifiable: notifiable.attributes,
+      notifiable: notifiable.try(:attributes),
       referrer: NotificationReferrer.generate(self),
       created_at: self.created_at
     }
