@@ -12,8 +12,10 @@ class Notification < ActiveRecord::Base
   validates :receiver, presence: true
   validates :notifier, presence: true
 
-  before_create :render_hash
+  after_create :render_hash
   after_create :send_to_pusher
+
+  serialize :rendered_hash, Hash
 
   class << self
     def mark_read
