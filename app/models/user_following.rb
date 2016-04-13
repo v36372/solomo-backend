@@ -7,8 +7,8 @@ class UserFollowing < ActiveRecord::Base
   private
   def send_notification
     Notification.create(
-      notifier: following,
-      receiver: user,
+      notifier: user,
+      receiver: following,
       notification_type: Notification.notification_types[:follow],
       notifiable: self
     )
