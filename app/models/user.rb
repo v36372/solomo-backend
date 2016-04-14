@@ -31,6 +31,8 @@ class User < ActiveRecord::Base
   has_many :user_tags, dependent: :destroy
   has_many :post_views
 
+  has_many :user_profile_views
+
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\Z/
   validates :first_name, :last_name, presence: true, unless: :api?
 
@@ -95,7 +97,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def to_api_json
+  def to_api_json(options = {})
     processed_birthday = nil
     processed_birthday = birthday.strftime('%d/%m/%Y') if birthday.present?
 
@@ -108,7 +110,9 @@ class User < ActiveRecord::Base
       emai: email,
       birthday: processed_birthday,
       avatar: processed_avatar,
-      is_store: self.is_store?
+      is_store: self.is_store?,
+      followers: followers.count,
+      followings: followings.count
     }
   end
 

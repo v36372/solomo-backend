@@ -14,6 +14,7 @@ module API
       mount API::V1::Password
       mount API::V1::Omniauth
       mount API::V1::Account
+      mount API::V1::Users
       mount API::V1::Tags
       mount API::V1::Posts
       mount API::V1::Feeds
