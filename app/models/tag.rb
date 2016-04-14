@@ -1,7 +1,6 @@
-
 class Tag < ActiveRecord::Base
   include PgSearch
-  multisearchable :against => [:name]
+  pg_search_scope :search_by_name, against: [:name], using: {:tsearch => {:prefix => true}}
 
   has_many :post_tags
   has_many :posts, through: :post_tags
