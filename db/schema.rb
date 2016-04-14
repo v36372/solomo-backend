@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160414114229) do
+ActiveRecord::Schema.define(version: 20160414203759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,6 +57,28 @@ ActiveRecord::Schema.define(version: 20160414114229) do
     t.datetime "updated_at"
   end
 
+  create_table "post_boost_tags", force: :cascade do |t|
+    t.integer  "post_boost_id"
+    t.integer  "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "post_boost_tags", ["post_boost_id"], name: "index_post_boost_tags_on_post_boost_id", using: :btree
+  add_index "post_boost_tags", ["tag_id"], name: "index_post_boost_tags_on_tag_id", using: :btree
+
+  create_table "post_boosts", force: :cascade do |t|
+    t.integer  "post_id"
+    t.integer  "age_min"
+    t.integer  "age_max"
+    t.boolean  "active",     default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "price"
+  end
+
+  add_index "post_boosts", ["post_id"], name: "index_post_boosts_on_post_id", using: :btree
+
   create_table "post_likes", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "post_id"
@@ -85,6 +107,7 @@ ActiveRecord::Schema.define(version: 20160414114229) do
     t.integer  "related_score"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "post_boost_id"
   end
 
   add_index "post_views", ["post_id"], name: "index_post_views_on_post_id", using: :btree
@@ -148,6 +171,7 @@ ActiveRecord::Schema.define(version: 20160414114229) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "price"
+    t.integer  "post_boost_id"
   end
 
   add_index "user_feeds", ["post_id"], name: "index_user_feeds_on_post_id", using: :btree
@@ -238,6 +262,9 @@ ActiveRecord::Schema.define(version: 20160414114229) do
     t.integer  "balance",                            default: 0
   end
 
+  add_foreign_key "post_boost_tags", "post_boosts"
+  add_foreign_key "post_boost_tags", "tags"
+  add_foreign_key "post_boosts", "posts"
   add_foreign_key "post_likes", "posts"
   add_foreign_key "post_likes", "users"
   add_foreign_key "post_tags", "posts"

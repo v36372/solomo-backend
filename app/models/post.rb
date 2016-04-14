@@ -11,6 +11,8 @@ class Post < ActiveRecord::Base
   has_many :comments, dependent: :destroy
   has_many :post_views
 
+  has_many :post_boosts
+
   before_create :generate_auto_post_tags
 
   after_update :push_post_update
@@ -133,6 +135,10 @@ class Post < ActiveRecord::Base
     UserFeedGenerator.push_post(self, :update)
   end
 
+  def boost_post
+    UserFeedGenerator.push_post(self, :boost)
+  end
+
   def extract_terms
     description.to_slug.normalize.transliterate(:vietnamese)
                .to_s.split('-').select {|term| term =~ /[a-zA-Z]+/i}
@@ -153,5 +159,19 @@ class Post < ActiveRecord::Base
   def push_to_user_tags
     return if self.user.blank?
     UserTag.generate_user_tags(self, self.user, 5)
+  end
+
+  def last_active_boost
+    @last_active_boost = self.post_boosts.active.order(created_at: :desc).first
+  end
+
+  def boosting_status
+    if self.last_active_boost.blank?
+      :deactivated
+    elsif self.user.balance < self.last_active_boost.price
+      :halted
+    else
+      :active
+    end
   end
 end

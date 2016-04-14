@@ -1,6 +1,7 @@
 class PostView < ActiveRecord::Base
   belongs_to :user
   belongs_to :post, counter_cache: :views
+  belongs_to :post_boost
   after_create :create_store_transaction
 
   private

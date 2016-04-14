@@ -1,6 +1,7 @@
 class UserFeed < ActiveRecord::Base
   belongs_to :user
   belongs_to :post
+  belongs_to :post_boost
 
   after_create :send_notification
   after_update :generate_post_views
@@ -31,7 +32,8 @@ class UserFeed < ActiveRecord::Base
       user_id: user_id,
       post_id: post_id,
       related_score: self.related_score,
-      price: self.price
+      price: self.price,
+      post_boost: self.post_boost
     )
   end
 end
