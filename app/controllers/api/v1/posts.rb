@@ -13,6 +13,7 @@ module API
           requires :user_token, type: String, desc: 'Generated user token'
           optional :user_id, type: String, desc: 'User id want to fetch the posts'
           optional :page, type: Integer, desc: 'Page want to fetch'
+          optional :tags, type: Array[String], desc: 'Tags of post to filter'
         end
         get do
           per_page = 20
@@ -20,6 +21,11 @@ module API
           @posts = Post.order(created_at: :desc)
           if params[:user_id].present?
             @posts = @posts.where(user_id: params[:user_id])
+          end
+          if params[:tags].present?
+            tag_ids = Tag.where(name: params[:tags].map(&:strip).compact).pluck(:id)
+            post_ids = PostTag.where(tag_id: tag_ids).pluck(:post_id)
+            @posts = @posts.where(id: post_ids)
           end
           if page.present?
             @posts = @posts.page(page).per(per_page)
@@ -41,7 +47,7 @@ module API
           optional :picture_id, desc: 'Picture id of uploaded image to post'
           optional :picture_url, desc: 'Picture url that needs to create a post'
           requires :description, type: String, desc: 'Description of the post'
-          optional :tags, type: Array, desc: 'Arry of tag id attached to the post'
+          optional :tags, type: Array[String], desc: 'Arry of tag id attached to the post'
           optional :location_lat, type: Float, desc: 'Latitude of the post'
           optional :location_long, type: Float, desc: 'Longitude of the post'
           optional :start_date, type: String, desc: 'Start date of the post'
