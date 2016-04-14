@@ -41,7 +41,7 @@ module Stores
       @delta_post_likes = (@before_post_likes.blank? || @before_post_likes == 0) ? nil : ((@filtered_post_likes - @before_post_likes).to_f / @before_post_likes * 100).round
       @delta_post_views = (@before_post_views.blank? || @before_post_views == 0) ? nil : ((@filtered_post_views - @before_post_views).to_f / @before_post_views * 100).round
       @delta_post_comments = (@before_post_comments.blank? || @before_post_comments == 0) ? nil : ((@filtered_post_comments - @before_post_comments).to_f / @before_post_comments * 100).round
-      @delta_followers = (@before_followers.blank? || @before_followers == 0) ? nil : ((@filtered_post_views - @before_post_followers).to_f / @before_followers * 100).round
+      @delta_followers = (@before_followers.blank? || @before_followers == 0) ? nil : ((@filtered_followers - @before_followers).to_f / @before_followers * 100).round
 
       ################################################
       # Filtered graphs
