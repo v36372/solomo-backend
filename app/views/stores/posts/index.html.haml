@@ -1,0 +1,10 @@
+#store_posts.container-fluid
+  %h3 All posts
+  %hr
+  .panel.panel-default
+    .panel-body
+      %table.table
+        - @posts.each do |post|
+          = render 'stores/posts/post', post: post
+      .top-20.text-center
+        = paginate @posts

@@ -1,0 +1,101 @@
+#store_new_boost.container-fluid
+  %h3 Boost post
+  %hr
+  .row.boost_container
+    .col-md-6
+      .panel.panel-default.post_info
+        .panel-heading
+          Post content
+        .panel-body
+          .picture= image_tag @post.picture.url(:fb_image) if @post.picture.present?
+          .metrics
+            .metric
+              = fa_icon 'eye'
+              = @post.views
+              views
+            .metric
+              = fa_icon 'star'
+              = @post.post_likes.count
+              likes
+            .metric
+              = fa_icon 'comment'
+              = @post.comments.count
+              comments
+          .description.top-30
+            %h4 Description
+            %hr
+            = @post.description
+          .tags.top-30
+            %h4 Tags
+            %hr
+            - @post.post_tags.each do |pt|
+              - if pt.is_auto?
+                .label.label-default{style: 'display: inline-block; margin: 3px;'}
+                  = fa_icon 'gear'
+                  = pt.tag.name
+              - else
+                .label.label-primary{style: 'display: inline-block; margin: 3px;'}
+                  = fa_icon 'user'
+                  = pt.tag.name
+    .col-md-6
+      .panel.panel-default.post_info
+        .panel-heading
+          Boost content
+        .panel-body
+          = render 'stores/posts/fake_form', boost: @boost
+          = form_for @boost, url: create_boost_stores_post_path(@post), method: :post, html: {class: 'true_form'} do |f|
+            %h4 Age of the users
+            %hr
+              %p This attributes will decide how wide your target users are. The wider the age range, the more expensive price per view is. Please be careful
+              %p
+                #age-range.top-20
+                .text-center#age-description.top-20
+                  Users from 25 to 30 years old
+            %h4 Emphasizing tags
+            %hr
+              %p
+                This attributes will help you to reach as accurate users as possible. That makes your users create more interactions and increase the loyalty. Choose the right tags will make your posts in higher position in user feeds and make the price cheaper. It is better to choose tags that match your post content. If you spam the tags, the price will become unexpectly expsensive.
+              %p
+                = f.hidden_field :age_min
+                = f.hidden_field :age_max
+                = select_tag :tags, options_for_select(@tags), class: 'form-control', multiple: true
+            %hr
+            %p
+              .pull-left
+                %h4
+                  Total price
+              .pull-right
+                %h4
+                  %span#boost_price= vietnamese_currency(@boost.calculate_price)
+              .clearfix
+            .text-center.top-20
+              %button.btn.btn-primary.btn-block.btn-lg
+                = fa_icon 'flash'
+                Boost now
+                = fa_icon 'flash'
+:javascript
+  $(function() {
+    $( "#age-range" ).slider({
+      range: true,
+      min: 13,
+      max: 65,
+      values: [ 20, 25 ],
+      slide: function( event, ui ) {
+        $( "#age-description" ).html( "Users from " + ui.values[ 0 ] + " to " + ui.values[ 1 ] + " years old");
+        $('[name*="age_min"]').val(ui.values[ 0 ] );
+        $('[name*="age_max"]').val(ui.values[ 1 ] );
+        $('.fake_form button').trigger("click");
+      }
+    });
+    $('.true_form select').select2();
+    $('.true_form select').on('change', function() {
+      var val = $(this).val();
+      if (!val || !val.length) {
+        $('.fake_form [name="tags"]').val('');
+      }
+      else {
+        $('.fake_form [name="tags"]').val(val.join(','));
+      }
+      $('.fake_form button').trigger("click");
+    });
+  });

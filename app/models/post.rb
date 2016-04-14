@@ -166,12 +166,18 @@ class Post < ActiveRecord::Base
   end
 
   def boosting_status
+    return @boosting_status if @boosting_status.present?
     if self.last_active_boost.blank?
-      :deactivated
+      @boosting_status = :deactivated
     elsif self.user.balance < self.last_active_boost.price
-      :halted
+      @boosting_status = :halted
     else
-      :active
+      @boosting_status = :active
     end
+    @boosting_status
+  end
+
+  def boost_spent
+    @boost_spent = PostView.where(post_boost_id: self.post_boost_ids).sum(:price)
   end
 end

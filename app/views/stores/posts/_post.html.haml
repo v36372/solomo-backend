@@ -1,0 +1,48 @@
+%tr.store_post{post_id: post.id}
+  %td.picture
+    = image_tag post.picture.url(:fb_image_thumb) if post.picture.present?
+  %td.description= post.description
+  %td.control
+    - if post.boosting_status == :active
+      = link_to deactivate_boost_stores_post_path(post), remote: true, data: {confirm: 'Are you sure?'}, method: :post do
+        .toggle
+          %input{type: 'checkbox', checked: 'checked', readonly: 'readonly'}
+          .handle
+    - elsif post.boosting_status == :halted
+      = link_to deactivate_boost_stores_post_path(post), remote: true, data: {confirm: 'Are you sure?'}, method: :post do
+        .toggle
+          %input{type: 'checkbox', checked: 'checked', readonly: 'readonly'}
+          .handle
+      = link_to new_stores_payment_path do
+        .label.label-danger.top-6
+          = fa_icon 'remove'
+          No money
+    - else
+      = link_to check_boost_stores_post_path(post), remote: true do
+        %input{type: 'checkbox', readonly: 'readonly'}
+        .toggle
+          .handle
+  %td.metrics
+    .metric
+      = fa_icon 'eye'
+      = post.views
+      views
+    .metric
+      = fa_icon 'star'
+      = post.post_likes.count
+      likes
+    .metric
+      = fa_icon 'comment'
+      = post.comments.count
+      comments
+  %td.pricing
+    .title
+      Spent
+    .number
+      = vietnamese_currency(post.boost_spent)
+  %td.pricing
+    - if post.boosting_status == :active || post.boosting_status == :halted
+      .title
+        Price
+      .number
+        = vietnamese_currency(post.last_active_boost.price)

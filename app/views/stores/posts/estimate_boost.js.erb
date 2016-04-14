@@ -1,0 +1,2 @@
+$('.fake_form').replaceWith('<%= j(render("stores/posts/fake_form", boost: @boost)) %>');
+$('#boost_price').html("<%= vietnamese_currency(@boost.calculate_price) %>");

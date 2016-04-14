@@ -167,6 +167,10 @@ module Stores
                     .group(:tag_id).count
                     .sort_by {|tag_id, count| count}
                     .reverse.first(5).map do |tag_id, count| [Tag.find_by_id(tag_id), count] end
+
+      @boosting_posts = current_user.posts.select do |post|
+        post.boosting_status == :active || post.boosting_status == :halted
+      end
     end
   end
 end

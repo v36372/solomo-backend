@@ -1,0 +1,8 @@
+<% if @post.errors.present? %>
+  alert('<%= @post.errors.full_messages.first %>');
+<% else %>
+  var existing = $('.store_post[post_id="<%= @post.id %>"]');
+  var newSection = $('<%= j(render("stores/posts/post", post: @post)) %>');
+  existing.replaceWith(newSection);
+  $('.modal').modal('hide');
+<% end %>

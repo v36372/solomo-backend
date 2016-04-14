@@ -34,8 +34,16 @@ Rails.application.routes.draw do
     end
     resources :payments, only: [:new, :create, :index]
     resources :transactions, only: [:show, :index]
-    resources :posts
-    resources :profiles
+    resources :posts, only: [:index] do
+      member do
+        get :check_boost
+        get :new_boost
+        post :estimate_boost
+        post :create_boost
+        post :activate_boost
+        post :deactivate_boost
+      end
+    end
   end
 
   namespace :admin do

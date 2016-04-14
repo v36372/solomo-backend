@@ -1,0 +1,7 @@
+<% if @last_post_boost.blank? %>
+window.location.replace('<%= new_boost_stores_post_url %>');
+<% else %>
+  var modal = $('<%= j(render("stores/posts/check_boost", boost: @last_post_boost)) %>');
+  $(document).append(modal);
+  modal.modal('show');
+<% end %>

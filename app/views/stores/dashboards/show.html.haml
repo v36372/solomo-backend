@@ -130,6 +130,17 @@
         .fl= fa_icon 'chevron-circle-up'
         .panel-body#graphFollowersInner
           %canvas#graphFollowers{height: 300}
+  - if @boosting_posts.present?
+    #store_dashboard_posts.top-30
+      .heading
+        .pull-left
+          %h3 Boosting posts
+        .pull-right
+        .clearfix
+      .panel.panel-default
+        %table.table
+          - @boosting_posts.each do |post|
+            = render 'stores/posts/post', post: post
   #store_dashboard_people
     .heading
       .pull-left

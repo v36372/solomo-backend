@@ -1,0 +1,26 @@
+.modal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close(type="button" class="close" data-dismiss="modal" aria-label="Close")
+          %span(aria-hidden="true") &times
+        %h4 Use last setting?
+      .modal-body
+        %p
+          Hi there, this post is used to boost in the past with following settings:
+        %p
+          %li Customer age range: #{boost.age_min} - #{boost.age_max}
+          %li.top-10
+            Match #{boost.post_boost_tags.count} tags:
+            %div.top-6
+              - boost.post_boost_tags.each do |bt|
+                .label.label-default= bt.tag.name
+          %li.top-10
+            Price per view:
+            %strong= vietnamese_currency(boost.price)
+        %p
+          Do you want to use this setting or use new settings?
+      .modal-footer
+        .text-center
+          = link_to 'Use this setting', activate_boost_stores_post_path(boost.post), remote: true, method: :post, class: 'btn btn-primary btn-lg'
+          = link_to 'New setting', new_boost_stores_post_path(boost.post), class: 'btn btn-default btn-lg'

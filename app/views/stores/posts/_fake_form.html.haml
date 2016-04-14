@@ -1,0 +1,6 @@
+= form_tag estimate_boost_stores_post_path(boost.post), method: :post, remote: true, style: 'display: none;', class: 'fake_form' do
+  = hidden_field_tag :authenticity_token, form_authenticity_token
+  = hidden_field_tag :age_min, boost.age_min
+  = hidden_field_tag :age_max, boost.age_max
+  = hidden_field_tag :tags, boost.post_boost_tags.map {|pt| pt.tag.name}.join(',')
+  %button
