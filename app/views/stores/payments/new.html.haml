@@ -1,0 +1,139 @@
+#store_new_payment
+  .text-center
+    %h3 New store payment
+  .col-md-8.col-md-offset-2.col-sm-8.col-sm-offset-2.top-10
+    = form_tag stores_payments_path, method: :post do
+      .col-md-4
+        .panel{payment_select: '100000', class: (@payment_select == '100000' ? 'panel-success' : 'panel-default' )}
+          .panel-heading
+            .pull-left
+              &nbsp;
+            .pull-right
+              = fa_icon 'check-circle-o'
+            .clearfix
+          .panel-body.text-center
+            100,000
+      .col-md-4
+        .panel{payment_select: '200000', class: (@payment_select == '200000' ? 'panel-success' : 'panel-default' )}
+          .panel-heading
+            .pull-left
+              &nbsp;
+            .pull-right
+              = fa_icon 'check-circle-o'
+            .clearfix
+          .panel-body.text-center
+            200,000
+      .col-md-4
+        .panel{payment_select: '500000', class: (@payment_select == '500000' ? 'panel-success' : 'panel-default' )}
+          .panel-heading
+            .pull-left
+              &nbsp;
+            .pull-right
+              = fa_icon 'check-circle-o'
+            .clearfix
+          .panel-body.text-center
+            500,000
+      .col-md-12
+        .panel{payment_select: 'custom', class: (@payment_select == 'custom' ? 'panel-success' : 'panel-default' )}
+          .panel-heading
+            .pull-left
+              Custom payment value
+            .pull-right
+              = fa_icon 'check-circle-o'
+            .clearfix
+          .panel-body.text-center{style: 'display: none'}
+            = hidden_field_tag :stripe_id, '', class: 'form-control'
+            = hidden_field_tag :payment_select, @payment_select, class: 'form-control'
+            = number_field_tag :payment_value, '', class: 'form-control'
+            .errors.top-10{style: 'display: none; overflow: hidden;'}
+              .label.label-danger
+                = fa_icon 'exclamation'
+              Payement value must be greater than 100,000
+      .col-md-12.text-center
+        .btn.btn-primary.btn-block.btn-lg.stripe_trigger Pay with credit card
+        %script(src="https://checkout.stripe.com/checkout.js")
+      .clearfix
+:javascript
+  $(function() {
+    $('[payment_select]').click(function() {
+      var control = $(this);
+      var select = control.attr('payment_select');
+      var form = control.parents('form');
+      form.find('input[name="payment_select"]').val(select).trigger('change');
+    });
+    $('input[name="payment_select"]').change(function(event) {
+      var control = $(this);
+      var selected_payment = control.val();
+      var payment_selections = $('[payment_select]');
+      var selected_control = payment_selections.filter('[payment_select="' + selected_payment + '"]');
+
+      payment_selections.removeClass('panel-success');
+      payment_selections.addClass('panel-default');
+      if ( selected_payment == 'custom') {
+        selected_control.find('input[type="number"]').val('');
+        selected_control.find('input[type="number"]').trigger('change');
+        selected_control.find('.panel-body').slideDown(function() {
+          selected_control.find('input[type="number"]').focus();
+        });
+      }
+      else {
+        payment_selections.filter('[payment_select="custom"]').find('.panel-body').slideUp();
+        $('input[name="payment_value"]').val(parseInt(selected_payment, 10)).trigger('change');
+      }
+      selected_control.removeClass('panel-default');
+      selected_control.addClass('panel-success');
+    });
+    var validateValue = function() {
+      var control = $(this);
+      var value = parseInt(control.val(), 10);
+      var label = control.parents('.panel').find('.errors');
+      if (control.val() == '') {
+        label.hide();
+        $('.stripe_trigger').attr('disabled', 'disabled');
+      }
+      else if (isNaN(value) || value < 100000) {
+        label.show();
+        $('.stripe_trigger').attr('disabled', 'disabled');
+      }
+      else {
+        label.hide();
+        $('.stripe_trigger').removeAttr('disabled');
+      }
+    };
+    $('input[name="payment_value"]').on('keyup', validateValue);
+    $('input[name="payment_value"]').on('change', validateValue);
+
+    var handler = StripeCheckout.configure({
+      key: "#{Rails.application.secrets.stripe_publishable_key}",
+      token: function(token) {
+        var control = $('[name="stripe_id"]');
+        control.val(token.id);
+        control.parents('form').submit();
+      }
+    });
+
+    $('.stripe_trigger').on('click', function(e) {
+      var control = $(this);
+      if (control.attr('disabled') == 'disabled') {
+        return;
+      }
+      // Open Checkout with further options
+      handler.open({
+        name: 'Solomo',
+        description: 'Solomo Store Charge',
+        amount: $('input[name="payment_value"]').val(),
+        currency: 'vnd',
+        email: "#{current_user.email}",
+        closed: function() {
+          $('.stripe_trigger').removeAttr('disabled');
+        }
+      });
+      control.attr('disabled', 'disabled');
+      e.preventDefault();
+    });
+
+    // Close Checkout on page navigation
+    $(window).on('popstate', function() {
+      handler.close();
+    });
+  });

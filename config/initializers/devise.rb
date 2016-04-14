@@ -257,9 +257,9 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
   config.omniauth :facebook, Rails.application.secrets.fb_app_id, Rails.application.secrets.fb_app_secret
-  if Rails.env.development? 
-    OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE 
-  end
+  # if Rails.env.development?
+  #   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+  # end
   config.warden do |manager|
     manager.default_strategies(scope: :user).unshift :rememberable
   end

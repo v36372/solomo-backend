@@ -418,6 +418,8 @@ GEM
     sshkit (1.8.1)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    stripe (1.41.0)
+      rest-client (~> 1.4)
     swagger-ui_rails (0.1.7)
     thin (1.6.4)
       daemons (~> 1.0, >= 1.0.9)
@@ -522,6 +524,7 @@ DEPENDENCIES
   sidetiq
   sinatra
   spring-commands-rspec
+  stripe
   swagger-ui_rails
   thin
   twilio-ruby

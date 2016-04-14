@@ -32,6 +32,8 @@ class User < ActiveRecord::Base
   has_many :post_views
 
   has_many :user_profile_views
+  has_many :user_payments
+  has_many :user_transactions
 
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\Z/
   validates :first_name, :last_name, presence: true, unless: :api?

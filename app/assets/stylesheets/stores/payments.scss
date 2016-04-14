@@ -1,0 +1,26 @@
+@import "compass";
+
+#store_new_payment {
+  [payment_select] {
+    cursor: pointer;
+    .panel-body {
+      font-size: 30px;
+      font-weight: bold;
+    }
+  }
+  [payment_select="custom"] {
+    .panel-body {
+      .errors {
+        text-align: left;
+        font-size: 12px !important;
+        color: red;
+        .label {
+          margin-right: 6px;
+        }
+        .fa {
+          margin: 0px;
+        }
+      }
+    }
+  }
+}

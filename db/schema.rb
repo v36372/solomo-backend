@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160414041115) do
+ActiveRecord::Schema.define(version: 20160414052009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,6 +161,17 @@ ActiveRecord::Schema.define(version: 20160414041115) do
 
   add_index "user_followings", ["user_id"], name: "index_user_followings_on_user_id", using: :btree
 
+  create_table "user_payments", force: :cascade do |t|
+    t.integer  "user_id"
+    t.text     "detail"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "amount"
+    t.string   "external_id"
+  end
+
+  add_index "user_payments", ["user_id"], name: "index_user_payments_on_user_id", using: :btree
+
   create_table "user_profile_views", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "target_user_id"
@@ -180,6 +191,16 @@ ActiveRecord::Schema.define(version: 20160414041115) do
 
   add_index "user_tags", ["tag_id"], name: "index_user_tags_on_tag_id", using: :btree
   add_index "user_tags", ["user_id"], name: "index_user_tags_on_user_id", using: :btree
+
+  create_table "user_transactions", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "amount"
+    t.integer "transactionable_id"
+    t.string  "transactionable_type"
+    t.text    "reason"
+  end
+
+  add_index "user_transactions", ["user_id"], name: "index_user_transactions_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 191
@@ -211,6 +232,7 @@ ActiveRecord::Schema.define(version: 20160414041115) do
     t.string   "authentication_token",   limit: 191
     t.boolean  "is_admin"
     t.integer  "profile_views",                      default: 0
+    t.integer  "balance",                            default: 0
   end
 
   add_foreign_key "post_likes", "posts"
@@ -224,7 +246,9 @@ ActiveRecord::Schema.define(version: 20160414041115) do
   add_foreign_key "user_feeds", "posts"
   add_foreign_key "user_feeds", "users"
   add_foreign_key "user_followings", "users"
+  add_foreign_key "user_payments", "users"
   add_foreign_key "user_profile_views", "users"
   add_foreign_key "user_tags", "tags"
   add_foreign_key "user_tags", "users"
+  add_foreign_key "user_transactions", "users"
 end
