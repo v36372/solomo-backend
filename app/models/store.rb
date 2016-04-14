@@ -84,4 +84,15 @@ class Store < ActiveRecord::Base
       body: "Your store registration has been approved. Please find out more at solomo website."
     )
   end
+
+  def to_api_json
+    {
+      website: self.website,
+      description: self.description,
+      address: self.address,
+      location_lat: self.location_lat,
+      location_long: self.location_long,
+      phone: self.phone
+    }
+  end
 end

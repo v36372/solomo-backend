@@ -106,7 +106,7 @@ class User < ActiveRecord::Base
     processed_avatar = nil
     processed_avatar = avatar.url(:thumb) if avatar.present?
 
-    {
+    result = {
       id: id,
       name: name,
       emai: email,
@@ -116,6 +116,21 @@ class User < ActiveRecord::Base
       followers: followers.count,
       followings: followings.count
     }
+
+    if options[:include_store] && self.is_store?
+      result[:store] = self.store.to_api_json
+    end
+
+    if options[:include_posts]
+      result[:posts] = self.posts.map(&:to_api_json)
+    end
+
+    if options[:include_liked_posts]
+      like_post_ids = PostLike.where(user_id: self.id).pluck(:post_id)
+      result[:liked_posts] = Post.where(id: like_post_ids).map(&:to_api_json)
+    end
+
+    result
   end
 
   def interaction_count

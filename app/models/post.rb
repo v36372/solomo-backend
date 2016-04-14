@@ -92,7 +92,7 @@ class Post < ActiveRecord::Base
       id: id,
       picture_url: picture.url(:original),
       description: description,
-      tags: tags.map {|t| {id: t.id, name: t.name} },
+      tags: self.post_tags.includes(:tag).where(is_auto: false).map {|pt| {id: pt.tag_id, name: pt.tag.name} },
       lat: lat,
       long: long,
       post_type: post_type || 'user',
