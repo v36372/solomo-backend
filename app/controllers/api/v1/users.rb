@@ -25,7 +25,7 @@ module API
                 user: current_user,
                 target_user: @user
               )
-              @user.to_api_json(include_store: true, include_posts: true, include_liked_posts: true)
+              @user.to_api_json(include_store: true)
             end
           end
         end
