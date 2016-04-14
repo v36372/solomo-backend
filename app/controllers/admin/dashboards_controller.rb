@@ -27,6 +27,23 @@ module Admin
           }
         ]
       }
+      last_15_days_posts = last_15_days.map do |day|
+        Post.where(created_at: day.beginning_of_day..day.end_of_day).count
+      end
+      @post_data = {
+        labels: last_15_days.map{|d| d.strftime("%d %b")},
+        datasets: [
+          {
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: last_15_days_posts
+          }
+        ]
+      }
     end
   end
 end

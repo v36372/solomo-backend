@@ -1,0 +1,305 @@
+#store_dashboard.container-fluid
+  #store_dashboard_information
+    .avatar
+      = image_tag current_user.avatar.url(:thumb) if current_user.avatar.present?
+    .information
+      .name= current_user.name
+      .extras
+        .extra
+          = fa_icon 'home'
+          = link_to current_user.store.website if current_user.store.website.present?
+        .extra
+          = fa_icon 'phone'
+          = current_user.store.phone
+    .metrics
+      .metric
+        .inner
+          .title Total followers
+          .number= @total_followers
+      .metric
+        .inner
+          .title Total post views
+          .number= @total_page_views
+      .metric
+        .inner
+          .title Current balance
+          .number= vietnamese_currency(current_user.balance)
+  #store_dashboard_overview
+    .heading
+      .pull-left
+        %h3 Overview
+      .pull-right
+      .clearfix
+    .statistics.row
+      .statistic.col-md-3.active{'data-toggle'=>"tab", href: '#graphPostViewsContainer'}
+        .panel.panel-default.text-center
+          .panel-heading
+            %strong Post view
+          .panel-body
+            .number= @filtered_post_views
+            - if @delta_post_views.present?
+              .delta{class: ("delta#{@delta_post_views <=> 0}")}
+                Post views
+                - if @delta_post_views > 0
+                  +
+                  = @delta_post_views
+                - elsif @delta_post_views == 0
+                  = '=='
+                - else
+                  \-
+                  = @delta_post_views
+                \%
+            - else
+              .delta &nbsp;
+      .statistic.col-md-3{'data-toggle'=>"tab", href: '#graphPostLikesContainer'}
+        .panel.panel-default.text-center
+          .panel-heading
+            %strong Post likes
+          .panel-body
+            .number= @filtered_post_likes
+            - if @delta_post_likes.present?
+              .delta{class: ("delta#{@delta_post_likes <=> 0}")}
+                Post likes
+                - if @delta_post_likes > 0
+                  +
+                  = @delta_post_likes
+                - elsif @delta_post_likes == 0
+                  = '=='
+                - else
+                  \-
+                  = @delta_post_likes
+                \%
+            - else
+              .delta &nbsp;
+      .statistic.col-md-3{'data-toggle'=>"tab", href: '#graphPostCommentsContainer'}
+        .panel.panel-default.text-center
+          .panel-heading
+            %strong Post comments
+          .panel-body
+            .number= @filtered_post_comments
+            - if @delta_post_comments.present?
+              .delta{class: ("delta#{@delta_post_comments <=> 0}")}
+                Post comments
+                - if @delta_post_comments > 0
+                  +
+                  = @delta_post_comments
+                - elsif @delta_post_comments == 0
+                  = '=='
+                - else
+                  \-
+                  = @delta_post_comments
+                \%
+            - else
+              .delta &nbsp;
+      .statistic.col-md-3{'data-toggle'=>"tab", href: '#graphFollowersContainer'}
+        .panel.panel-default.text-center
+          .panel-heading
+            %strong Followers
+          .panel-body
+            .number= @filtered_followers
+            - if @delta_followers.present?
+              .delta{class: ("delta#{@delta_followers <=> 0}")}
+                Followers
+                - if @delta_followers > 0
+                  +
+                  = @delta_followers
+                - elsif @delta_followers == 0
+                  = '=='
+                - else
+                  \-
+                  = @delta_followers
+                \%
+            - else
+              .delta &nbsp;
+    .graphs.tab-content{style: 'padding: 0px'}
+      #graphPostViewsContainer.tab-pane.fade.in.active
+        .fl= fa_icon 'chevron-circle-up'
+        .panel-body#graphPostViewsInner
+          %canvas#graphPostViews{height: 300}
+      #graphPostLikesContainer.tab-pane.fade
+        .fl= fa_icon 'chevron-circle-up'
+        .panel-body#graphPostLikesInner
+          %canvas#graphPostLikes{height: 300}
+      #graphPostCommentsContainer.tab-pane.fade
+        .fl= fa_icon 'chevron-circle-up'
+        .panel-body#graphPostCommentsInner
+          %canvas#graphPostComments{height: 300}
+      #graphFollowersContainer.tab-pane.fade
+        .fl= fa_icon 'chevron-circle-up'
+        .panel-body#graphFollowersInner
+          %canvas#graphFollowers{height: 300}
+  #store_dashboard_people
+    .heading
+      .pull-left
+        %h3 People who visit your page
+      .pull-right
+      .clearfix
+    .statistics.row
+      .col-md-4
+        .panel.panel-default
+          .panel-heading
+            Age distribution
+          .panel-body#graphUserAgeInner
+            %canvas#graphUserAge
+      .col-md-4
+        .panel.panel-default
+          .panel-heading
+            Page views / week
+          .panel-body#graphUserViewsInner
+            %canvas#graphUserViews
+      .col-md-4
+        .panel.panel-default
+          .panel-heading
+            Top tags
+          .panel-body
+            - @user_tags.each do |tag, number|
+              .tag
+                .pull-left= tag.name
+                .pull-right= number
+                .clearfix
+
+:javascript
+  $(function() {
+      var postViewsCanvas, postViewsChart, linePostViewsChart;
+      var postViewsOptions = {
+        tooltipTemplate: function(valuesObject){
+          return valuesObject.label + ": " + valuesObject.value + " views";
+        }
+      }
+      var width = $("#graphPostViewsInner").width();
+      postViewsCanvas = document.getElementById("graphPostViews");
+      postViewsCanvas.width = width;
+      var ctx = postViewsCanvas.getContext("2d");
+      postViewsChart = new Chart(ctx);
+      linePostViewsChart = postViewsChart.Line(JSON.parse('#{j(@post_views_data.to_json)}'), postViewsOptions);
+
+    var shownPostLikes = false;
+    $('[href="#graphPostLikesContainer"]').on('shown.bs.tab', function() {
+      if (shownPostLikes) {
+        return;
+      }
+      shownPostLikes = true;
+      setTimeout(function() {
+        var postLikesCanvas, postLikesChart, linePostLikesChart;
+        var postLikesOptions = {
+          tooltipTemplate: function(valuesObject){
+            return valuesObject.label + ": " + valuesObject.value + " likes";
+          }
+        }
+        var width = $("#graphPostLikesInner").width();
+        postLikesCanvas = document.getElementById("graphPostLikes");
+        postLikesCanvas.width = width;
+        var ctx = postLikesCanvas.getContext("2d");
+        postLikesChart = new Chart(ctx);
+        linePostLikesChart = postLikesChart.Line(JSON.parse('#{j(@post_likes_data.to_json)}'), postLikesOptions);
+      }, 250);
+    });
+
+    var shownPostComments = false;
+    $('[href="#graphPostCommentsContainer"]').on('shown.bs.tab', function() {
+      if (shownPostComments) {
+        return;
+      }
+      shownPostComments = true;
+      setTimeout(function() {
+        var postCommentsCanvas, postCommentsChart, linePostCommentsChart;
+        var postCommentsOptions = {
+          tooltipTemplate: function(valuesObject){
+            return valuesObject.label + ": " + valuesObject.value + " comments";
+          }
+        }
+        var width = $("#graphPostCommentsInner").width();
+        postCommentsCanvas = document.getElementById("graphPostComments");
+        postCommentsCanvas.width = width;
+        var ctx = postCommentsCanvas.getContext("2d");
+        postCommentsChart = new Chart(ctx);
+        linePostCommentsChart = postCommentsChart.Line(JSON.parse('#{j(@post_comments_data.to_json)}'), postCommentsOptions);
+      }, 250);
+    });
+
+    var shownFollowers = false;
+    $('[href="#graphFollowersContainer"]').on('shown.bs.tab', function() {
+      if (shownFollowers) {
+        return;
+      }
+      shownFollowers = true;
+      setTimeout(function() {
+        var followersCanvas, followersChart, lineFollowersChart;
+        var followersOptions = {
+          tooltipTemplate: function(valuesObject){
+            return valuesObject.label + ": " + valuesObject.value + " follows";
+          }
+        }
+        var width = $("#graphFollowersInner").width();
+        followersCanvas = document.getElementById("graphFollowers");
+        followersCanvas.width = width;
+        var ctx = followersCanvas.getContext("2d");
+        followersChart = new Chart(ctx);
+        lineFollowersChart = followersChart.Line(JSON.parse('#{j(@followers_data.to_json)}'), followersOptions);
+      }, 250);
+    });
+
+    var dataUserAge = [
+      {
+          value: #{@group_data[0]},
+          color:"#F7464A",
+          highlight: "#FF5A5E",
+          label: "Age < 17>"
+      },
+      {
+          value: #{@group_data[1]},
+          color: "#46BFBD",
+          highlight: "#5AD3D1",
+          label: "Age #{@groups[1]}"
+      },
+      {
+          value: #{@group_data[2]},
+          color: "#FDB45C",
+          highlight: "#FFC870",
+          label: "Age #{@groups[2]}"
+      },
+      {
+          value: #{@group_data[3]},
+          color: "#5ca6fc",
+          highlight: "#7cb8ff",
+          label: "Age > 30"
+      }
+    ]
+    var width = $("#graphUserAgeInner").width();
+    var userAgeCanvse = document.getElementById("graphUserAge");
+    var ctx = userAgeCanvse.getContext("2d");
+    userAgeCanvse.width = width;
+    var graphUserAge = new Chart(ctx).Doughnut(dataUserAge);
+
+    var dataUserViews = [
+      {
+          value: #{@view_group_data[0]},
+          color:"#F7464A",
+          highlight: "#FF5A5E",
+          label: "View < 5>"
+      },
+      {
+          value: #{@view_group_data[1]},
+          color: "#46BFBD",
+          highlight: "#5AD3D1",
+          label: "View #{@view_groups[1]}"
+      },
+      {
+          value: #{@view_group_data[2]},
+          color: "#FDB45C",
+          highlight: "#FFC870",
+          label: "Views #{@view_groups[2]}"
+      },
+      {
+          value: #{@view_group_data[3]},
+          color: "#5ca6fc",
+          highlight: "#7cb8ff",
+          label: "Views > 15"
+      }
+    ]
+    var width = $("#graphUserViewsInner").width();
+    var userAgeCanvse = document.getElementById("graphUserViews");
+    var ctx = userAgeCanvse.getContext("2d");
+    userAgeCanvse.width = width;
+    var graphUserViews = new Chart(ctx).Doughnut(dataUserViews);
+  });

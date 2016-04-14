@@ -35,8 +35,6 @@ Rails.application.routes.draw do
     resources :payments, only: [:new, :create, :index]
     resources :transactions, only: [:show, :index]
     resources :posts
-    resources :people
-    resources :followers
     resources :profiles
   end
 
