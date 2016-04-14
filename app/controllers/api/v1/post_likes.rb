@@ -12,6 +12,7 @@ module API
         desc "Get like list of a post"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
+          requires :post_id, type: Integer, desc: 'Post id'
         end
         get do
           if @post.blank?

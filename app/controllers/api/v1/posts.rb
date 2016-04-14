@@ -11,9 +11,10 @@ module API
         desc "Get all posts"
         params do
           requires :user_token, type: String, desc: 'Generated user token'
-          optional :user_id, type: String, desc: 'User id want to fetch the posts'
+          optional :liked_by_id, type: Integer, desc: 'Filter posts liked by a user'
+          optional :user_id, type: String, desc: 'Filter by posts author'
+          optional :tags, type: Array[String], desc: 'Filter posts that have tags'
           optional :page, type: Integer, desc: 'Page want to fetch'
-          optional :tags, type: Array[String], desc: 'Tags of post to filter'
         end
         get do
           per_page = 20
@@ -25,6 +26,10 @@ module API
           if params[:tags].present?
             tag_ids = Tag.where(name: params[:tags].map(&:strip).compact).pluck(:id)
             post_ids = PostTag.where(tag_id: tag_ids).pluck(:post_id)
+            @posts = @posts.where(id: post_ids)
+          end
+          if params[:liked_by_id].present?
+            post_ids = PostLike.where(user_id: params[:liked_by_id]).pluck(:post_id)
             @posts = @posts.where(id: post_ids)
           end
           if page.present?
