@@ -3,41 +3,47 @@
     %h3 New store payment
   .col-md-8.col-md-offset-2.col-sm-8.col-sm-offset-2.top-10
     = form_tag stores_payments_path, method: :post do
-      .col-md-4
-        .panel{payment_select: '100000', class: (@payment_select == '100000' ? 'panel-success' : 'panel-default' )}
-          .panel-heading
-            .pull-left
-              &nbsp;
-            .pull-right
-              = fa_icon 'check-circle-o'
-            .clearfix
-          .panel-body.text-center
-            100,000
-      .col-md-4
-        .panel{payment_select: '200000', class: (@payment_select == '200000' ? 'panel-success' : 'panel-default' )}
-          .panel-heading
-            .pull-left
-              &nbsp;
-            .pull-right
-              = fa_icon 'check-circle-o'
-            .clearfix
-          .panel-body.text-center
-            200,000
-      .col-md-4
-        .panel{payment_select: '500000', class: (@payment_select == '500000' ? 'panel-success' : 'panel-default' )}
-          .panel-heading
-            .pull-left
-              &nbsp;
-            .pull-right
-              = fa_icon 'check-circle-o'
-            .clearfix
-          .panel-body.text-center
-            500,000
       .col-md-12
-        .panel{payment_select: 'custom', class: (@payment_select == 'custom' ? 'panel-success' : 'panel-default' )}
+        .panel.panel-default
+          .panel-body
+            %li Please choose the payment value below or type a custom value to put into your account.
+            %li We support international Credit and Debit cards published by VISA, MASTER CARD and JDB cooperation only.
+            %li All payment transactions are secured and powered by international payment service Stripe. We don't store any card information
+      .col-md-4
+        .panel{payment_select: '100000', class: (@payment_select == '100000' ? 'panel-primary' : 'panel-default' )}
           .panel-heading
             .pull-left
-              Custom payment value
+              &nbsp;
+            .pull-right
+              = fa_icon 'check-circle-o'
+            .clearfix
+          .panel-body.text-center
+            100,000 đ
+      .col-md-4
+        .panel{payment_select: '200000', class: (@payment_select == '200000' ? 'panel-primary' : 'panel-default' )}
+          .panel-heading
+            .pull-left
+              &nbsp;
+            .pull-right
+              = fa_icon 'check-circle-o'
+            .clearfix
+          .panel-body.text-center
+            200,000 đ
+      .col-md-4
+        .panel{payment_select: '500000', class: (@payment_select == '500000' ? 'panel-primary' : 'panel-default' )}
+          .panel-heading
+            .pull-left
+              &nbsp;
+            .pull-right
+              = fa_icon 'check-circle-o'
+            .clearfix
+          .panel-body.text-center
+            500,000 đ
+      .col-md-12
+        .panel{payment_select: 'custom', class: (@payment_select == 'custom' ? 'panel-primary' : 'panel-default' )}
+          .panel-heading
+            .pull-left
+              Custom payment value (Vietnam Dong)
             .pull-right
               = fa_icon 'check-circle-o'
             .clearfix
@@ -49,9 +55,11 @@
               .label.label-danger
                 = fa_icon 'exclamation'
               Payement value must be greater than 100,000
-      .col-md-12.text-center
+      .col-md-12.text-center.top-10
         .btn.btn-primary.btn-block.btn-lg.stripe_trigger Pay with credit card
         %script(src="https://checkout.stripe.com/checkout.js")
+      .col-md-12.top-10.text-center{style: 'font-size: 12px; color: #aaa;'}
+        By click "Pay with credit card", you agree with our Terms and Conditions about payments
       .clearfix
 :javascript
   $(function() {
@@ -67,7 +75,7 @@
       var payment_selections = $('[payment_select]');
       var selected_control = payment_selections.filter('[payment_select="' + selected_payment + '"]');
 
-      payment_selections.removeClass('panel-success');
+      payment_selections.removeClass('panel-primary');
       payment_selections.addClass('panel-default');
       if ( selected_payment == 'custom') {
         selected_control.find('input[type="number"]').val('');
@@ -81,7 +89,7 @@
         $('input[name="payment_value"]').val(parseInt(selected_payment, 10)).trigger('change');
       }
       selected_control.removeClass('panel-default');
-      selected_control.addClass('panel-success');
+      selected_control.addClass('panel-primary');
     });
     var validateValue = function() {
       var control = $(this);
@@ -104,6 +112,7 @@
     $('input[name="payment_value"]').on('change', validateValue);
 
     var handler = StripeCheckout.configure({
+      image:  "#{image_url('logo_circle.png')}",
       key: "#{Rails.application.secrets.stripe_publishable_key}",
       token: function(token) {
         var control = $('[name="stripe_id"]');

@@ -139,6 +139,14 @@ class User < ActiveRecord::Base
     UserFollowing.where(user_id: other_user.id, following_id: self.id).exists?
   end
 
+  def balance_used
+    UserTransaction.where('amount is not null and amount < 0').sum(:amount).abs
+  end
+
+  def balance_charged
+    UserTransaction.where('amount is not null and amount > 0').sum(:amount)
+  end
+
   private
 
   def api?

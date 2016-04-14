@@ -1,0 +1,12 @@
+@import "compass";
+
+.transaction_post {
+  width: 500px;
+  @include display-flex();
+  @include align-items(flex-start);
+  img {
+    margin-right: 15px;
+    width: 128px;
+    @include flex-shrink(0);
+  }
+}

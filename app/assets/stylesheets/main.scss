@@ -1,10 +1,12 @@
+@import "compass";
+
 .dropdown-menu {
   background-color: #ffffff !important;
   a {
     color: #333 !important;
   }
   li.divider {
-    background-color: transparent !important;
+    background-color: #eee !important;
   }
   li {
     a:hover {
@@ -17,8 +19,20 @@ header {
   z-index: 1;
   border-bottom: 1px #eee solid;
   margin-bottom: 15px;
+
   nav {
     margin-bottom: 0px !important;
+    background-color: #3BAFDA;
+    @include border-radius(0px !important);
+    .navbar-brand {
+      color: #fff;
+    }
+    .dropdown-toggle {
+      color: #fff !important;
+      &:hover, &[aria-expanded="true"] {
+        background-color: #45c2f0 !important;
+      }
+    }
   }
 }
 
@@ -52,4 +66,30 @@ header {
 
 .fa {
   margin-right:6px;
+}
+
+.lx-site-pagination {
+  ul li {
+    a {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      color: #999;
+      &:hover {
+        background-color: #eee;
+        border: 1px solid #ddd;
+        color: #444;
+      }
+    }
+    &.active a {
+      background-color: #eee;
+      border: 1px solid #ddd;
+      color: #444;
+      font-weight: bold;
+      &:hover {
+        background-color: #eee;
+        border: 1px solid #ddd;
+        color: #444;
+      }
+    }
+  }
 }

@@ -1,0 +1,66 @@
+#payments_index.container-fluid
+  %h3
+    Payment dashboard
+  %hr
+  .col-md-4.statistic
+    .panel.panel-default.text-center
+      .panel-heading
+        %strong Your balance
+      .panel-body
+        = vietnamese_currency current_user.balance
+        .top-6
+          = link_to new_stores_payment_path, class: 'btn btn-primary' do
+            = fa_icon 'plus'
+            New payments
+  .col-md-4.statistic
+    .panel.panel-default.text-center
+      .panel-heading
+        %strong Total used
+      .panel-body
+        = vietnamese_currency current_user.balance_used
+        .top-6
+          = link_to stores_transactions_path, class: 'btn btn-default' do
+            View all transactions
+  .col-md-4.statistic
+    .panel.panel-default.text-center
+      .panel-heading
+        %strong Total charged
+      .panel-body
+        = vietnamese_currency current_user.balance_charged
+        .top-6
+          = link_to '#', class: 'btn btn-default all_payments' do
+            View all payments
+  .col-md-4.statistic
+  .col-md-12
+    .panel.panel-default
+      .panel-heading
+        Payments and balance graphs
+      .panel-body.graph_graph
+        %canvas#graphChart{height: 350}
+  = render 'stores/payments/index', payments: @payments
+  .clearfix
+
+:javascript
+  $(function() {
+    $('.all_payments').click(function() {
+      $('document, body').animate({
+        scrollTop: $('#all_payments').offset().top
+      });
+    });
+
+    var graphCanvas, graphChart, lineUserChart;
+    var graph_type = "days";
+    var graph_method = "all"
+    var graphOptions = {
+      tooltipTemplate: function(valuesObject){
+        return valuesObject.label + ": " + accounting.formatMoney(valuesObject.value, "Orders", 0, ',', '.', "%v %s");
+      },
+      multiTooltipTemplate: "<%= datasetLabel + ': ' + value %>"
+    }
+    var width = $(".graph_graph").width();
+    graphCanvas = document.getElementById("graphChart");
+    graphCanvas.width = width;
+    var ctx = graphCanvas.getContext("2d");
+    graphChart = new Chart(ctx);
+    lineUserChart = graphChart.Line(JSON.parse('#{j(@graph_data.to_json)}'), graphOptions);
+  });

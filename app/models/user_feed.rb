@@ -30,7 +30,8 @@ class UserFeed < ActiveRecord::Base
     PostView.create(
       user_id: user_id,
       post_id: post_id,
-      related_score: self.related_score
+      related_score: self.related_score,
+      price: self.price
     )
   end
 end

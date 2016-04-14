@@ -10,6 +10,15 @@
   }
   [payment_select="custom"] {
     .panel-body {
+      input[type="number"] {
+        border: none;
+        outline: none;
+        outline-width: 0px;
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        height: 50px;
+      }
       .errors {
         text-align: left;
         font-size: 12px !important;
@@ -21,6 +30,16 @@
           margin: 0px;
         }
       }
+    }
+  }
+}
+
+#payments_index {
+  .statistic {
+    .panel-body {
+      padding: 30px 0px;
+      font-size: 30px;
+      font-weight: bold;
     }
   }
 }

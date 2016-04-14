@@ -1,0 +1,23 @@
+.col-md-12#all_payments
+  .panel.panel-default
+    .panel-heading
+      Lasted payments
+    .panel-body
+      - if payments.present?
+        %table.table{style: ('height: 410px;' if payments.total_pages > 1)}
+          %thead
+            %tr
+              %th Date
+              %th Amount
+              %th Service
+          %tbody
+            - payments.each do |p|
+              %tr{payment_id: p.id}
+                %td
+                  = time_ago_in_words p.created_at
+                  ago
+                %td= vietnamese_currency(p.amount)
+                %td Stripe
+        .text-center.top-20= paginate payments, remote: true, params: { action: :index, controller: 'stores/payments'}
+      - else
+        .text-center No payments found

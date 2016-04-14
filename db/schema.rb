@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160414052009) do
+ActiveRecord::Schema.define(version: 20160414114229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -147,6 +147,7 @@ ActiveRecord::Schema.define(version: 20160414052009) do
     t.integer  "related_score"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "price"
   end
 
   add_index "user_feeds", ["post_id"], name: "index_user_feeds_on_post_id", using: :btree
@@ -193,11 +194,13 @@ ActiveRecord::Schema.define(version: 20160414052009) do
   add_index "user_tags", ["user_id"], name: "index_user_tags_on_user_id", using: :btree
 
   create_table "user_transactions", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "amount"
-    t.integer "transactionable_id"
-    t.string  "transactionable_type"
-    t.text    "reason"
+    t.integer  "user_id"
+    t.integer  "amount"
+    t.integer  "transactionable_id"
+    t.string   "transactionable_type"
+    t.text     "reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_transactions", ["user_id"], name: "index_user_transactions_on_user_id", using: :btree

@@ -1,0 +1,2 @@
+var payments = $('<%= j(render('stores/payments/index', payments: @payments)) %>');
+$('#all_payments').replaceWith(payments);

@@ -34,8 +34,18 @@
                   %a.dropdown-toggle{:href => stores_followers_path}
                     Followers
                 %li.dropdown
-                  %a.dropdown-toggle{:href => stores_payments_path}
+                  %a.dropdown-toggle{:href => stores_payments_path, "data-toggle" => "dropdown", :href => "#"}
                     Payments
+                    = fa_icon 'caret-down'
+                  %ul.dropdown-menu
+                    %li
+                      = link_to stores_payments_path  do
+                        = fa_icon 'th-large'
+                        Payments
+                    %li
+                      = link_to new_stores_payment_path  do
+                        = fa_icon 'plus'
+                        New payment
                 %li.dropdown
                   %a.dropdown-toggle{:href => stores_profiles_path}
                     Profile

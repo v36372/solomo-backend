@@ -32,7 +32,8 @@ Rails.application.routes.draw do
       get :staff
       get :finish
     end
-    resources :payments
+    resources :payments, only: [:new, :create, :index]
+    resources :transactions, only: [:show, :index]
     resources :posts
     resources :people
     resources :followers

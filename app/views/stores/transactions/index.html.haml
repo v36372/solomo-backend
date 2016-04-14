@@ -1,0 +1,30 @@
+#transactions.container-fluid
+  %h3
+    Transactions dashboard
+  %hr
+  .panel.panel-default
+    .panel-body
+      - if @transactions.present?
+        %table.table
+          %thead
+            %tr
+              %th Date
+              %th Post
+              %th Viewer
+              %th Amount
+          %tbody
+            - @transactions.each do |t|
+              %tr{trasaction_id: t.id}
+                %td
+                  = time_ago_in_words t.created_at
+                  ago
+                %td
+                  = link_to stores_post_path(t.transactionable.post), class: 'transaction_post' do
+                    = image_tag t.transactionable.post.picture.url(:fb_image_thumb) if t.transactionable.post.picture.present?
+                    = t.transactionable.post.description
+                %td
+                  = t.transactionable.user.name
+                %td= vietnamese_currency(t.amount.abs)
+        .text-center.top-20= paginate @transactions
+      - else
+        .text-center No transactions found
