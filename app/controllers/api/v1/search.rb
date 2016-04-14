@@ -77,12 +77,11 @@ module API
           optional :q, type: String, desc: 'Keyword to serach'
         end
         get :tags do
-          results = PgSearch.multisearch(params[:q])
-                            .where(searchable_type: 'Tag')
+          results = Tag.search_by_name(params[:q])
           json_results = results.map do |result|
             {
-              result_type: result.searchable_type,
-              result_data: result.searchable.to_api_json
+              result_type: 'Tag',
+              result_data: result.to_api_json
             }
           end
           return {
