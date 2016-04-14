@@ -3,9 +3,17 @@ module Stores
     before_action :authenticate_store!
 
     def show
-      @end_at = Time.current.end_of_day
-      @delta_at = (@end_at - 14.days).beginning_of_day
-      @start_at = (@end_at - 7.days).beginning_of_day
+      if params[:end_at].present? && params[:start_at].present?
+        arr_end_at = params[:end_at].split('/').map &:to_i
+        arr_start_at = params[:start_at].split('/').map &:to_i
+        @end_at = Time.new(arr_end_at[2], arr_end_at[1], arr_end_at[0])
+        @start_at = Time.new(arr_start_at[2], arr_start_at[1], arr_start_at[0])
+        @delta_at = (@start_at - ((@end_at - @start_at) / 24 / 60 / 60).days).beginning_of_day
+      else
+        @end_at = Time.current.end_of_day
+        @delta_at = (@end_at - 14.days).beginning_of_day
+        @start_at = (@end_at - 7.days).beginning_of_day
+      end
 
       @total_followers = current_user.followers.count
       @total_page_views = PostView.where(post_id: current_user.posts.pluck(:id)).count
@@ -52,6 +60,7 @@ module Stores
         days << runner.beginning_of_day
         runner -= 1.days
       end
+      days.reverse!
 
       post_views_days = days.map do |day|
         PostView.where(post_id: current_user.posts.pluck(:id))

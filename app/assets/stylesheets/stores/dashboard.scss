@@ -67,6 +67,18 @@
     }
   }
   #store_dashboard_overview {
+    .time_filters {
+      form {
+        & > * {
+          margin-left: 5px;
+        }
+        @include display-flex();
+        @include align-items(center);
+        .fa {
+          margin-right: 0px;
+        }
+      }
+    }
     .tab-pane {
       margin-top: 10px;
       padding: 15px;

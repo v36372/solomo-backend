@@ -16,6 +16,7 @@
  *= require_tree ./stores
  *= require_tree ./static
  *= require ./main
+ *= require jquery-ui
  *= require_self
  */
  @import "bootstrap-sprockets";

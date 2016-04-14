@@ -28,7 +28,13 @@
     .heading
       .pull-left
         %h3 Overview
-      .pull-right
+      .pull-right.time_filters
+        = form_tag stores_dashboards_path, method: :get do
+          = text_field_tag :start_at, @start_at.strftime('%d/%m/%Y'), class: 'form-control'
+          %span -
+          = text_field_tag :end_at, @end_at.strftime('%d/%m/%Y'), class: 'form-control'
+          %button.btn.btn-primary
+            = fa_icon 'th-list'
       .clearfix
     .statistics.row
       .statistic.col-md-3.active{'data-toggle'=>"tab", href: '#graphPostViewsContainer'}
@@ -298,4 +304,11 @@
     var ctx = userAgeCanvse.getContext("2d");
     userAgeCanvse.width = width;
     var graphUserViews = new Chart(ctx).Doughnut(dataUserViews);
+
+    $('[name="start_at"]').datepicker({
+      dateFormat: 'dd/mm/yy'
+    });
+    $('[name="end_at"]').datepicker({
+      dateFormat: 'dd/mm/yy'
+    });
   });
