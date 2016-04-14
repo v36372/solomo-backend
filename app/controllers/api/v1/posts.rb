@@ -29,8 +29,8 @@ module API
             @posts = @posts.where(id: post_ids)
           end
           if params[:liked_by_id].present?
-            post_ids = PostLike.where(user_id: params[:liked_by_id]).pluck(:post_id)
-            @posts = @posts.where(id: post_ids)
+            like_post_ids = PostLike.where(user_id: params[:liked_by_id]).pluck(:post_id)
+            @posts = @posts.where(id: like_post_ids)
           end
           if page.present?
             @posts = @posts.page(page).per(per_page)
