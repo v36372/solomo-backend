@@ -42,7 +42,9 @@ module API
         end
         post :read do
           feed_ids = params[:feed_ids].to_s.split(',')
-          UserFeed.where(id: feed_ids).update_all(seen: true)
+          UserFeed.where(id: feed_ids).each do |feed|
+            feed.update(seen: true)
+          end
           {
             result: 'Marked read successfully'
           }

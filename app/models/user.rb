@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :store
 
   has_many :user_tags, dependent: :destroy
+  has_many :post_views
 
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\Z/
   validates :first_name, :last_name, presence: true, unless: :api?

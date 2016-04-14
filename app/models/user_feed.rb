@@ -3,6 +3,7 @@ class UserFeed < ActiveRecord::Base
   belongs_to :post
 
   after_create :send_notification
+  after_update :generate_post_views
 
   class << self
     def of_user(user)
@@ -21,6 +22,15 @@ class UserFeed < ActiveRecord::Base
       receiver: user,
       notification_type: Notification.notification_types[:feed],
       notifiable: self
+    )
+  end
+
+  def generate_post_views
+    return unless seen_changed? && seen == true
+    PostView.create(
+      user_id: user_id,
+      post_id: post_id,
+      related_score: self.related_score
     )
   end
 end

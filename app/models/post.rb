@@ -9,6 +9,7 @@ class Post < ActiveRecord::Base
   belongs_to :user
 
   has_many :comments, dependent: :destroy
+  has_many :post_views
 
   before_create :generate_auto_post_tags
 

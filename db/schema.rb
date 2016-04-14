@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160413005932) do
+ActiveRecord::Schema.define(version: 20160414035505) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,18 @@ ActiveRecord::Schema.define(version: 20160413005932) do
   add_index "post_tags", ["post_id"], name: "index_post_tags_on_post_id", using: :btree
   add_index "post_tags", ["tag_id"], name: "index_post_tags_on_tag_id", using: :btree
 
+  create_table "post_views", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "post_id"
+    t.integer  "price"
+    t.integer  "related_score"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "post_views", ["post_id"], name: "index_post_views_on_post_id", using: :btree
+  add_index "post_views", ["user_id"], name: "index_post_views_on_user_id", using: :btree
+
   create_table "posts", force: :cascade do |t|
     t.integer  "user_id"
     t.text     "description"
@@ -98,6 +110,7 @@ ActiveRecord::Schema.define(version: 20160413005932) do
     t.text     "address"
     t.string   "promotion_type"
     t.text     "promotion_value"
+    t.integer  "views",                            default: 0
   end
 
   add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
@@ -194,6 +207,8 @@ ActiveRecord::Schema.define(version: 20160413005932) do
   add_foreign_key "post_likes", "users"
   add_foreign_key "post_tags", "posts"
   add_foreign_key "post_tags", "tags"
+  add_foreign_key "post_views", "posts"
+  add_foreign_key "post_views", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "stores", "users"
   add_foreign_key "user_feeds", "posts"
