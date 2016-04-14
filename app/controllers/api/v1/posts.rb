@@ -41,7 +41,7 @@ module API
           optional :picture_id, desc: 'Picture id of uploaded image to post'
           optional :picture_url, desc: 'Picture url that needs to create a post'
           requires :description, type: String, desc: 'Description of the post'
-          optional :tags, type: String, desc: 'Arry of tag id attached to the post'
+          optional :tags, type: Array, desc: 'Arry of tag id attached to the post'
           optional :location_lat, type: Float, desc: 'Latitude of the post'
           optional :location_long, type: Float, desc: 'Longitude of the post'
           optional :start_date, type: String, desc: 'Start date of the post'
@@ -57,10 +57,8 @@ module API
         post do
           @post = Post.new(
             description: params[:description],
-            tag_ids: params[:tags].to_s.split(','),
             lat: params[:location_lat],
             long: params[:location_long],
-            post_type: params[:post_type],
             post_type: params[:post_type],
             promotion_type: params[:promotion_type],
             promotion_value: params[:promotion_value]
@@ -100,21 +98,16 @@ module API
             @post.user = current_user
           end
 
+          # Post tags
+          tag_names = params[:tags] || []
+          tag_names.map(&:strip).uniq.compact.each do |tag_name|
+            tag = Tag.find_or_create_by(name: tag_name)
+            @post.tags << tag if tag.present?
+          end
+
           # Save post
           if @post.save
-            return {
-              id: @post.id,
-              picture_url: @post.picture.url(:original),
-              description: @post.description,
-              tag_ids: @post.tags.map {|t| {id: t.id, name: t.name} },
-              lat: @post.lat,
-              long: @post.long,
-              user: {
-                  name: @post.user_name,
-                  email: @post.user_email,
-                  avatar_url: @post.user_avatar_url
-              }
-            }
+            @post.to_api_json
           else
             errors = {error: @post.errors}
             return errors

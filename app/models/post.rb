@@ -91,7 +91,7 @@ class Post < ActiveRecord::Base
       id: id,
       picture_url: picture.url(:original),
       description: description,
-      tag_ids: tags.map {|t| {id: t.id, name: t.name} },
+      tags: tags.map {|t| {id: t.id, name: t.name} },
       lat: lat,
       long: long,
       post_type: post_type || 'user',
