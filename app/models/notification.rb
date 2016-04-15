@@ -25,7 +25,7 @@ class Notification < ActiveRecord::Base
 
   def pusher_hash(cache = true)
     if rendered_hash.present? && cache
-      rendered_hash
+      rendered_hash.merge({read: self.read})
     else
       {
         id: self.id,
