@@ -167,7 +167,7 @@ class Post < ActiveRecord::Base
 
   def boosting_status
     return @boosting_status if @boosting_status.present?
-    if self.last_active_boost.blank?
+    if self.last_active_boost.blank? || !self.last_active_boost.persisted?
       @boosting_status = :deactivated
     elsif self.user.balance < self.last_active_boost.price
       @boosting_status = :halted
